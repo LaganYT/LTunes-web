@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<link rel="shortcut icon" href="https://cdn.glitch.com/fd5c9ab2-f54e-46cd-ac45-b2546c198f3a%2Fgtwongamers.png?v=1632159476262" />
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Georgetown Gamers Radio</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<link rel="stylesheet" type="text/css" href="https://gtowngamers.ga/247/style.css">
+</head>
+<style>
+        a {
+          background-color: #23272A;
+          color: WHITE;
+        }
+  </style>
+<div style="background-color: #23272A; height:30px;">
+<a href="/247">Listen to our 24/7 Playlist</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/replays">Listen to Replays of our show!</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/live">Listen Live!</a>
+</div>
+<body>
+<div class="player">
+<div class="details">
+<div class="now-playing">PLAYING LIVE</div>
+<div class="track-art"></div>
+<div class="track-name">Track Name</div>
+<div class="track-artist">Track Artist</div>
+</div>
+<div class="buttons">
+<div class="playpause-track" onclick="playpauseTrack()"><i class="fa fa-play-circle fa-5x"></i></div>
+</div>
+<div class="slider_container">
+<div class="current-time">00:00</div>
+<input type="range" min="1" max="100" value="0" class="seek_slider" onchange="seekTo()">
+<div class="total-duration"></div>
+</div>
+<div class="slider_container">
+<i class="fa fa-volume-down"></i>
+<input type="range" min="1" max="100" value="99" class="volume_slider" onchange="setVolume()">
+<i class="fa fa-volume-up"></i>
+</div>
+</div>
+
+<script src="https://gtowngamers.ga/live/main.js"></script>
+</body>
+</html>
