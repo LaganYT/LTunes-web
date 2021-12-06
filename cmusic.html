@@ -182,7 +182,7 @@
 			
 			$scope.search = function(query, limit, offset) {
 				$http({
-					url: '/api/search',
+					url: 'https://jukebox-redux.herokuapp.com/api/search',
 					method: 'GET',
 					params: {
 						q: query,
@@ -199,7 +199,7 @@
 			};
 			
 			$scope.loadSuggestions = function(query) {
-				return $http.get('/api/tracks/search?q='+ query)
+				return $http.get('https://jukebox-redux.herokuapp.com/api/tracks/search?q='+ query)
 					.then(function(response) {
 						return response.data.body.tracks.items;
 					});
@@ -210,10 +210,10 @@
 				
 				switch (dataType) {
 					case 'albums':
-						promise = $http.get('/api/albums/'+item.id+'/tracks');
+						promise = $http.get('https://jukebox-redux.herokuapp.com/api/albums/'+item.id+'https://jukebox-redux.herokuapp.com/tracks');
 						break;
 					case 'playlists':
-						promise = $http.get('/api/users/'+item.owner.id+'/playlists/'+item.id+'/tracks');
+						promise = $http.get('https://jukebox-redux.herokuapp.com/api/users/'+item.owner.id+'https://jukebox-redux.herokuapp.com/playlists/'+item.id+'https://jukebox-redux.herokuapp.com/tracks');
 						break;
 				}
 				
@@ -229,7 +229,7 @@
 				var artistName = track.artists[0].name,
 					trackName = track.name;
 				
-				$scope.queue.nowPlaying.streamUrl = '/api/tracks/mp3?artist='+artistName+'&track='+trackName;
+				$scope.queue.nowPlaying.streamUrl = 'https://jukebox-redux.herokuapp.com/api/tracks/mp3?artist='+artistName+'&track='+trackName;
 				$scope.$apply();
 			};
 			
@@ -240,7 +240,7 @@
 			
 			$scope.openLyrics = function(event) {
 				var track = $scope.queue.tracks[$scope.queue.nowPlaying.index];
-				$http.get('/api/tracks/lyrics?track_id='+ track.id).then(function(response) {
+				$http.get('https://jukebox-redux.herokuapp.com/api/tracks/lyrics?track_id='+ track.id).then(function(response) {
 					$mdDialog.show({
 						parent: angular.element(document.body),
 						targetEvent: event,
