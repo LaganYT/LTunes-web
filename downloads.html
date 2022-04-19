@@ -1,572 +1,292 @@
-
- <!DOCTYPE html>
-<html lang="en">
 <head>
 <title>LTunes</title>
 <link rel="shortcut icon" type="image/jpg" href="https://LTunes.gq/assets/Logo.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
-<script async src="https://arc.io/widget.min.js#QhbuAwqB"></script>
+<script async src="https://arc.io/widget.min.js#eMnAzx6E"></script>
 <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans:700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans:400" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 </head>
-<button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
-<body>
-<div class="darkmode" id="dark-mode">
-<div class="topnav" id="myTopnav">
-<h1><img class="masthead-brand" src="https://laganyt.github.io/LTunes/assets/Logo.png" alt="Logo Icon" width="50" height="50" />
-LTunes
-</h1>
-<a href="music">Music</a> &nbsp;&nbsp;&nbsp;&nbsp;<a href="radio">Radio</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn-toggle">Toggle Dark-Mode</a>
-<a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+<div class="Logo"><img src="https://ltunes.gq/assets/Logo.png" width="50" height="50">LTunes</div>
+<div class="wrapper">
+<div class="profile-wrap">
+<div class="profile">
+<div class="profile-icon" onclick="location.href = 'https://www.ltunes.gq/assets/LTunes.apk'" ;>
+<img width="100%" height="100%" src="data:image/png;base64,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"></img>
+</div>
+<div class="profile-name">
+Android
 </div>
 </div>
-</body>
-<style>/* The alert message box */
-.alert {
-  padding: 20px;
-  background-color: #f44336; /* Red */
-  color: white;
-  margin-bottom: 15px;
-}
-
-/* The close button */
-.closebtn {
-  margin-left: 15px;
-  color: white;
-  font-weight: bold;
-  float: right;
-  font-size: 22px;
-  line-height: 20px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-/* When moving the mouse over the close button */
-.closebtn:hover {
-  color: black;
-		}</style>
 <style>
-.alert {
-  opacity: 1;
-  transition: opacity 0.6s; /* 600ms to fade out */
+	@font-face {
+  font-family: LM;
+  src: url(LemonMilk.ttf);
 }
-</style>
-<script>
-// Get all elements with class="closebtn"
-var close = document.getElementsByClassName("closebtn");
-var i;
-
-// Loop through all close buttons
-for (i = 0; i < close.length; i++) {
-  // When someone clicks on a close button
-  close[i].onclick = function(){
-
-    // Get the parent of <span class="closebtn"> (<div class="alert">)
-    var div = this.parentElement;
-
-    // Set the opacity of div to 0 (transparent)
-    div.style.opacity = "0";
-
-    // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
-    setTimeout(function(){ div.style.display = "none"; }, 600);
-  }
-}
-</script>
-<body>
-<header id="head" class="parallax">
-<h2>LTunes</h2>
-</header>
-<section id="banner" class="parallax"></section>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<section class="white">
-<header id="about" class="parallax">
-<h2>Where should you download LTunes on today?</h2><h5><br>
-<a href="https://www.ltunes.gq/assets/LTunes.apk">Android APK <strong>(Updated: 04/13/22 9:15am PST)</strong>)</a>
-</h5>
-</section>
-<section id="banner" class="parallax">
-</section>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-		function myFunction() {
-		    var x = document.getElementById("myTopnav");
-		    if (x.className === "topnav") {
-		        x.className += " responsive";
-		    } else {
-		        x.className = "topnav";
-		    }
-		}
-	</script>
-<script>
-	// When the user scrolls down 20px from the top of the document, show the button
-	window.onscroll = function() {scrollFunction()};
-
-	function scrollFunction() {
-	    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-	        document.getElementById("myBtn").style.display = "block";
-	    } else {
-	        document.getElementById("myBtn").style.display = "none";
-	    }
+	.Logo {
+	font-family: LM;
 	}
-
-	// When the user clicks on the button, scroll to the top of the document
-	function topFunction() {
-	    document.body.scrollTop = 0;
-	    document.documentElement.scrollTop = 0;
+	body {
+	 background: #141414;
+	 font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	 font-weight: 300;
+	 color: WHITE;
+	 opacity: 0;
+	 animation: fade-in 500ms ease 200ms 1 forwards;
+}
+ body h1 {
+	 color: WHITE;
+	 font-size: 50px;
+}
+ body a {
+	 padding: 5px 15px;
+	 color: #6d6d6d;
+	 font-size: 17px;
+	 text-decoration: none;
+	 text-transform: uppercase;
+	 border: 1px solid #6d6d6d;
+	 transition: all 300ms ease;
+}
+ body a:hover {
+	 color: #ebecec;
+	 border: 1px solid #ebecec;
+}
+ @keyframes fade-in {
+	 0% {
+		 opacity: 0;
+		 transform: scale(1.2);
 	}
-	</script>
-<style>
-  body {
-  --bkg-color: #fff;
+	 100% {
+		 opacity: 1;
+		 transform: scale(1);
+	}
 }
-body.dark-theme {
-  color: WHITE;
-  --bkg-color: #353535;
+ .wrapper {
+	 margin: 100px 0;
+	 text-align: center;
+}
+ .profile {
+	 width: 150px;
+}
+ .profile-wrap {
+	 display: flex;
+	 flex-wrap: wrap;
+	 justify-content: space-between;
+	 max-width: 800px;
+	 margin: 50px auto;
+}
+ .profile-icon {
+	 width: 150px;
+	 height: 150px;
+	 border: 6px solid #1f1f1f;
+	 transition: all 300ms ease;
+}
+ .profile-name {
+	 margin: 20px 0;
+	 line-height: 1.25em;
+	 transition: all 300ms ease;
+}
+ .profile:hover .profile-icon {
+	 border: 6px solid #ebecec;
+}
+ .profile:hover .profile-name {
+	 color: #ebecec;
+}
+ .profile1 #left-brow {
+	 transform-origin: center 80%;
+	 animation: raise 10s ease-in-out infinite;
+}
+ .profile1 #sunglasses {
+	 transform-origin: center 100%;
+	 animation: tilt 10s 250ms ease infinite;
+}
+ .profile1 #mustache {
+	 transform-origin: center 90%;
+	 animation: mustache 10s 0ms ease infinite;
+}
+ @keyframes raise {
+	 0% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 10% {
+		 transform: translateY(-10px) rotate(5deg);
+	}
+	 20% {
+		 transform: translateY(-10px) rotate(5deg);
+	}
+	 25% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 100% {
+		 transform: translateY(0px);
+	}
+}
+ @keyframes tilt {
+	 0% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 10% {
+		 transform: translateY(-2px) rotate(5deg);
+	}
+	 20% {
+		 transform: translateY(-2px) rotate(5deg);
+	}
+	 25% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 100% {
+		 transform: translateY(0px);
+	}
+}
+ @keyframes mustache {
+	 20% {
+		 transform: translateY(0px) scale(1);
+	}
+	 30% {
+		 transform: translateY(4px) rotate(-3deg) scale(1.03);
+	}
+	 40% {
+		 transform: translateY(0px) scale(1);
+	}
+}
+ .profile2 #left-pupil, .profile2 #right-pupil {
+	 animation: side-to-side 10s ease-in-out infinite alternate;
+}
+ .profile2 #left-eye-top, .profile2 #right-eye-top {
+	 transform-origin: center bottom;
+	 animation: wide-open 10s ease-in-out infinite alternate;
+}
+ .profile2 #bottom-beak, .profile2 #gillard {
+	 transform-origin: center top;
+	 animation: chew 20s ease-in-out infinite;
+}
+ .profile2 #hair {
+	 animation: hair 4s ease infinite alternate;
+}
+ @keyframes side-to-side {
+	 0% {
+		 transform: translateX(0px);
+	}
+	 5% {
+		 transform: translateX(-5px);
+	}
+	 10% {
+		 transform: translateX(-5px);
+	}
+	 20% {
+		 transform: translateX(5px);
+	}
+	 25% {
+		 transform: translateX(5px);
+	}
+	 35% {
+		 transform: translateX(-5px);
+	}
+	 40% {
+		 transform: translateX(-5px);
+	}
+	 45% {
+		 transform: translateX(0px);
+	}
+}
+ @keyframes wide-open {
+	 0% {
+		 opacity: 0;
+	}
+	 40% {
+		 opacity: 0;
+		 transform: scale(1, 0);
+	}
+	 42% {
+		 opacity: 1;
+		 transform: scale(1, 1);
+	}
+	 100% {
+		 opacity: 1;
+		 transform: scale(1, 1);
+	}
+}
+ @keyframes chew {
+	 0% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 2% {
+		 transform: translateY(3px) rotate(-3deg);
+	}
+	 4% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 6% {
+		 transform: translateY(3px) rotate(-3deg);
+	}
+	 8% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 10% {
+		 transform: translateY(3px) rotate(-3deg);
+	}
+	 12% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 14% {
+		 transform: translateY(3px) rotate(0deg);
+	}
+	 18% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 26% {
+		 transform: translateY(15px);
+	}
+	 78% {
+		 transform: translateY(15px);
+	}
+	 80% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 100% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+}
+ @keyframes hair {
+	 0% {
+		 transform: scale(1);
+	}
+	 50% {
+		 transform: scale(1, 0.8);
+	}
+	 100% {
+		 transform: scale(1);
+	}
+}
+ .profile3 svg {
+	 animation: bg-fade 10s ease infinite;
+}
+ .profile3 svg #smile {
+	 width: 100px;
+}
+ @keyframes bg-fade {
+	 0% {
+		 background: #86a546;
+	}
+	 40% {
+		 background: #86a546;
+	}
+	 45% {
+		 background: #e09927;
+	}
+	 55% {
+		 background: #e09927;
+	}
+	 60% {
+		 background: #86a546;
+	}
 }
 
-@media (prefers-color-scheme: dark) {
-  /* defaults to dark theme */
-  body {
-    --bkg-color: #121212;
-  }
-  body.light-theme {
-    --bkg-color: #fff;
-  }
-}
 
-* {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-  background: var(--bkg-color);
-}
-
-h1,
-p {
-  color: var(--text-color);
-}
-
-  </style>
-<script>const btn = document.querySelector(".btn-toggle");
-const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
-
-const currentTheme = localStorage.getItem("theme");
-if (currentTheme == "dark") {
-  document.body.classList.toggle("dark-theme");
-} else if (currentTheme == "light") {
-  document.body.classList.toggle("light-theme");
-}
-
-btn.addEventListener("click", function () {
-  if (prefersDarkScheme.matches) {
-    document.body.classList.toggle("light-theme");
-    var theme = document.body.classList.contains("light-theme")
-      ? "light"
-      : "dark";
-  } else {
-    document.body.classList.toggle("dark-theme");
-    var theme = document.body.classList.contains("dark-theme")
-      ? "dark"
-      : "light";
-  }
-  localStorage.setItem("theme", theme);
-});
-</script>
-<style>@-ms-viewport {
-  width: device-width;
-}
-html {
-  box-sizing: border-box;
-  -ms-overflow-style: scrollbar;
-}
-*,
-::after,
-::before {
-  box-sizing: inherit;
-}
-html,
-body {
-  font-family: pt sans, sans-serif;
-  margin: 0;
-  padding: 0;
-  scroll-behavior: smooth;
-}
-hr {
-  max-width: 420px;
-  color: #718093;
-}
-p {
-  font-family: lato, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: pt sans, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-.parallax {
-  height: 100%;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-footer {
-  text-align: center;
-  color: #fff;
-}
-a {
-  text-decoration: none;
-  color: #5352ed;
-  transition: all 0.2s ease-in;
-}
-a:hover {
-  text-decoration: none;
-  color: #192a56;
-  transition: all 0.2s ease-in;
-}
-#myBtn {
-  display: none;
-  position: fixed;
-  bottom: 20px;
-  right: 30px;
-  z-index: 99;
-  border: none;
-  outline: none;
-  background-color: #3498db;
-  cursor: pointer;
-  padding: 15px;
-  padding-right: 19px;
-  padding-left: 19px;
-  font-size: 18px;
-  transition: all 0.2s ease-in;
-}
-#myBtn:hover {
-  transition: all 0.2s ease-in;
-}
-.topnav {
-  list-style-type: none;
-  overflow: hidden;
-  box-shadow: 0 6px 13px -7px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease-in;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-.topnav a {
-  float: left;
-  display: block;
-  text-align: center;
-  padding: 24px 26px;
-  text-decoration: none;
-  font-size: 17px;
-}
-.topnav a:hover {
-  color: #3498db;
-}
-.topnav .icon {
-  display: none;
-}
-@media screen and (max-width: 800px) {
-  .topnav a:not(:first-child) {
-    display: none;
-  }
-  .topnav a.icon {
-    float: right;
-    display: block;
-  }
-}
-@media screen and (max-width: 800px) {
-  .topnav.responsive {
-    position: relative;
-  }
-  .topnav.responsive .icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  .topnav.responsive a {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-}
-@media screen and (min-width: 800px) {
-  div .max-width {
-    max-width: 60%;
-    margin: 0 auto;
-    box-shadow: none;
-  }
-}
-#head {
-  background-image: url(https://i.ibb.co/RQCCFYv/download-1.jpg);
-  margin: 0;
-  padding: 222px 0;
-  text-align: center;
-  color: #fff;
-}
-#head h1 {
-  font-size: 55px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-#head h3 {
-  font-size: 22px;
-  text-transform: uppercase;
-}
-#about {
-  margin: 10px;
-  text-align: center;
-  padding-top: 66px;
-  padding-bottom: 66px;
-}
-#about h1 {
-  font-size: 30px;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-top: 15px;
-}
-#about .features {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding-top: 66px;
-}
-#about .feature {
-  font-size: 60px;
-  color: #1c2630;
-  margin-top: 17px;
-}
-#about h2 {
-  font-size: 20px;
-}
-#about p {
-  font-size: 18px;
-}
-#about .white {
-  background-color: WHITE;
-  padding: 0;
-}
-#banner {
-  background-image: url(https://i.ibb.co/RQCCFYv/download-1.jpg);
-  padding: 75px 0;
-  text-align: center;
-}
-#banner2 {
-  background-image: url(https://i.ibb.co/RQCCFYv/download-1.jpg);
-  padding: 75px 0;
-  text-align: center;
-  color: #000;
-}
-#banner3 {
-  background-image: url(https://i.ibb.co/RQCCFYv/download-1.jpg);
-  padding: 75px 0;
-  text-align: center;
-}
-#banner h1 {
-  font-size: 30px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #fff;
-}
-#banner h2 {
-  margin-top: 5px;
-  font-size: 20px;
-  color: #fff;
-}
-#banner2 h1 {
-  font-size: 30px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #fff;
-}
-#banner2 h2 {
-  margin-top: 5px;
-  font-size: 20px;
-  color: #fff;
-}
-#banner3 h1 {
-  font-size: 30px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #fff;
-}
-#banner3 h2 {
-  margin-top: 5px;
-  font-size: 20px;
-  color: #fff;
-}
-#staff {
-  margin: 10px;
-  text-align: center;
-  padding-top: 66px;
-  padding-bottom: 66px;
-}
-#staff h1 {
-  font-size: 30px;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-top: 15px;
-}
-#staff h2 {
-  margin-top: 5px;
-  font-size: 20px;
-}
-#staff p {
-  margin-top: 3px;
-  font-size: 18px;
-}
-#staff .stafflist {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding-top: 66px;
-}
-#staff .staffblock {
-  transform: none;
-  transition: all 0.2s ease-in;
-  margin-bottom: 5px;
-}
-#staff .staffblock:hover {
-  transform: scale(1.1, 1.1);
-  transition: all 0.2s ease-in;
-}
-#gamemodes {
-  margin: 10px;
-  text-align: center;
-  padding-top: 66px;
-  padding-bottom: 66px;
-}
-#gamemodes h1 {
-  font-size: 30px;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-top: 15px;
-}
-#gamemodes h2 {
-  margin-top: 5px;
-  font-size: 20px;
-}
-#gamemodes p {
-  margin-top: 3px;
-  font-size: 18px;
-}
-#gamemodes .gray {
-  background-color: gray;
-  padding: 0;
-  margin: -10px;
-}
-#gamemodes .mode {
-  margin: 15px;
-  text-align: left;
-  padding: 50px;
-  max-width: 1280px;
-}
-#gamemodes .mode-inv {
-  margin: 15px;
-  text-align: right;
-  padding: 50px;
-  max-width: 1280px;
-}
-@media screen and (min-width: 800px) {
-  #gamemodes .img {
-    margin: 15px;
-    padding: 50px;
-    max-width: 1280px;
-  }
-}
-@media screen and (max-width: 799px) {
-  #gamemodes .img {
-    padding: 50px 0;
-  }
-}
-#gamemodes .fixed-width {
-  max-width: 1280px;
-  margin: 0 auto;
-}
-#vote {
-  margin: 10px;
-  text-align: center;
-  padding-top: 66px;
-  padding-bottom: 66px;
-}
-#vote h1 {
-  font-size: 30px;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-top: 15px;
-}
-#vote h2 {
-  margin-top: 5px;
-  font-size: 20px;
-}
-#vote p {
-  margin-top: 3px;
-  font-size: 18px;
-}
-#vote .votelist {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding-top: 66px;
-  padding-bottom: 66px;
-}
-#vote .voteblock {
-  transform: none;
-  transition: all 0.2s ease-in;
-}
-.voteblock a {
-  font-weight: 700;
-}
-.footer {
-  max-width: 1280px;
-  margin: 0 auto;
-  float: none;
-  padding-top: 66px;
-  padding-bottom: 66px;
-}
-.copyright-notice {
-  color: #30343a;
-  margin: 0;
-  margin-bottom: 0;
-  padding: 0;
-  text-align: center;
-  transition: all 0.2s ease-in;
-  cursor: default;
-}
-.copyright-notice:hover {
-  color: #fff;
-  margin: 0;
-  margin-bottom: 0;
-  padding: 0;
-  text-align: center;
-  transition: all 0.2s ease-in;
-}
-@media screen and (min-width: 800px) {
-  .res-img {
-    width: 480px;
-  }
-}
-@media screen and (max-width: 799px) {
-  .res-img {
-    width: 100%;
-  }
-}
-@media screen and (min-width: 800px) {
-  .res-img-sm {
-    height: 110px;
-  }
-}
-@media screen and (max-width: 799px) {
-  .res-img-sm {
-    width: 100%;
-  }
-		}</style>
+ </style>
 </body>
 </html>
