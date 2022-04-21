@@ -1,13 +1,28 @@
 <html>
-	<link rel="shortcut icon" type="image/jpg" href="https://LTunes.gq/assets/Logo.png" />
-	<script async src="https://arc.io/widget.min.js#eMnAzx6E"></script>
-<h1;><img onclick="location.href = 'https://www.ltunes.gq/'"  class="masthead-brand" src="https://www.ltunes.gq/assets/Logo.png" alt="Logo Icon" width="50" height="50" />
-LTunes
-</h1>
+<link rel="shortcut icon" type="image/jpg" href="https://LTunes.gq/assets/Logo.png" />
+<script async src="https://arc.io/widget.min.js#eMnAzx6E"></script>
+<style>
+#text{
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  font-size: 50px;
+  color: white;
+  transform: translate(0%,0%);
+  -ms-transform: translate(0%,0%);
+  display: block;
+}
+</style>
+
+<div id="overlay">
+  <div id="text" onclick="location.href = 'https://www.ltunes.gq/'">
+    <img src="https://i.ibb.co/j8kNb12/image.png"></img>
+  </div>
+</div>
 <iframe src="https://jukebox-redux.herokuapp.com" style="border:0px #ffffff none;" name="myiFrame" scrolling="yes" frameborder="1" marginheight="0px" marginwidth="0px" height="100%" width="100%" allowfullscreen></iframe>
-	<head><title>LTunes | Music</title>
-	<link rel="shortcut icon" type="image/png" href="https://LTunes.gq/assets/Logo.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<head><title>LTunes | Music</title>
+<link rel="shortcut icon" type="image/png" href="https://LTunes.gq/assets/Logo.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
 <style>
 	html {
 	background:#283593;
@@ -70,7 +85,7 @@ btn.addEventListener("click", function () {
   localStorage.setItem("theme", theme);
 });
 </script>
-	<style>@-ms-viewport {
+<style>@-ms-viewport {
   width: device-width;
 }
 html {
