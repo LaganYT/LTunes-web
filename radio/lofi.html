@@ -1,1 +1,170 @@
-https://rr1---sn-n4v7snl7.googlevideo.com/videoplayback?expire=1650521615&ei=r6FgYuuYKZmSgQfUjJnIAw&ip=45.74.45.144&id=DWcJFNfaw9c.4&itag=140&source=yt_live_broadcast&requiressl=yes&vprv=1&live=1&hang=1&noclen=1&mime=audio%2Fmp4&gir=yes&keepalive=yes&fexp=24001373,24007246&c=ANDROID&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Clive%2Chang%2Cnoclen%2Cmime%2Cgir&sig=AOq0QJ8wRgIhAPQLFVgzbzpNg7wO_pZmHiKdKgNT5twFa7nb9YQCkoT6AiEA7-9XFsGX8jI6AE03P0mVfyyCif_T0qWmtuLo-fDnt4E%3D&redirect_counter=1&rm=sn-4g5erz76&req_id=c875fe075beda3ee&cms_redirect=yes&ipbypass=yes&mh=Ms&mip=2600:380:ac66:d171:9cf7:9526:dec3:3f9a&mm=44&mn=sn-n4v7snl7&ms=lva&mt=1650499706&mv=m&mvi=1&pl=41&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pl&lsig=AG3C_xAwRgIhAJXIJ6VZ-1lWVt6pzQ5bTXvvgx9a47-mIJf51QCn2DB9AiEA0yl-4P14tZm4Qhwg0_enTAD9Vn6UK2LE9QjGs8NLvro%3D
+<!DOCTYPE html>
+<html lang="en">
+<link rel="shortcut icon" href="https://laganyt.github.io/LTunes/assets/Logo.png" />
+<head>
+        <link rel="shortcut icon" type="image/jpg" href="https://LTunes.gq/assets/Logo.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LTunes | KFOK Radio</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+<link rel="stylesheet" type="text/css" href="https://gtowngamers.ga/247/style.css">
+</head>
+<style>
+        a {
+          background-color: #23272A;
+          color: WHITE;
+        }
+  </style>
+<body>
+<div class="player">
+<div class="details">
+<div class="now-playing">PLAYING LIVE</div>
+<div class="track-art"></div>
+<div class="track-name">Track Name</div>
+<div class="track-artist">Track Artist</div>
+</div>
+<div class="buttons">
+<div class="playpause-track" onclick="playpauseTrack()"><i class="fa fa-play-circle fa-5x"></i></div>
+</div>
+<div class="slider_container">
+<div class="current-time">00:00</div>
+<input type="range" min="1" max="100" value="0" class="seek_slider" onchange="seekTo()">
+<div class="total-duration"></div>
+</div>
+<div class="slider_container">
+<i class="fa fa-volume-down"></i>
+<input type="range" min="1" max="100" value="99" class="volume_slider" onchange="setVolume()">
+<i class="fa fa-volume-up"></i>
+</div>
+</div>
+
+<script>let now_playing = document.querySelector(".now-playing");
+let track_art = document.querySelector(".track-art");
+let track_name = document.querySelector(".track-name");
+let track_artist = document.querySelector(".track-artist");
+
+let playpause_btn = document.querySelector(".playpause-track");
+let next_btn = document.querySelector(".next-track");
+let prev_btn = document.querySelector(".prev-track");
+
+let seek_slider = document.querySelector(".seek_slider");
+let volume_slider = document.querySelector(".volume_slider");
+let curr_time = document.querySelector(".current-time");
+let total_duration = document.querySelector(".total-duration");
+
+let track_index = 0;
+let isPlaying = false;
+let updateTimer;
+
+// Create new audio element
+let curr_track = document.createElement('audio');
+
+// Define the tracks that have to be played
+let track_list = [
+  {
+    name: "Lofi Radio",
+    artist: "Live",
+    image: "data:image/jpeg;base64,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",
+    path: "https://rr1---sn-n4v7snl7.googlevideo.com/videoplayback?expire=1650521615&ei=r6FgYuuYKZmSgQfUjJnIAw&ip=45.74.45.144&id=DWcJFNfaw9c.4&itag=140&source=yt_live_broadcast&requiressl=yes&vprv=1&live=1&hang=1&noclen=1&mime=audio%2Fmp4&gir=yes&keepalive=yes&fexp=24001373,24007246&c=ANDROID&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Clive%2Chang%2Cnoclen%2Cmime%2Cgir&sig=AOq0QJ8wRgIhAPQLFVgzbzpNg7wO_pZmHiKdKgNT5twFa7nb9YQCkoT6AiEA7-9XFsGX8jI6AE03P0mVfyyCif_T0qWmtuLo-fDnt4E%3D&redirect_counter=1&rm=sn-4g5erz76&req_id=c875fe075beda3ee&cms_redirect=yes&ipbypass=yes&mh=Ms&mip=2600:380:ac66:d171:9cf7:9526:dec3:3f9a&mm=44&mn=sn-n4v7snl7&ms=lva&mt=1650499706&mv=m&mvi=1&pl=41&lsparams=ipbypass,mh,mip,mm,mn,ms,mv,mvi,pl&lsig=AG3C_xAwRgIhAJXIJ6VZ-1lWVt6pzQ5bTXvvgx9a47-mIJf51QCn2DB9AiEA0yl-4P14tZm4Qhwg0_enTAD9Vn6UK2LE9QjGs8NLvro%3D"
+  }
+  ];
+
+function random_bg_color() {
+
+  // Get a number between 64 to 256 (for getting lighter colors)
+  let red = Math.floor(Math.random() * 256) + 64;
+  let green = Math.floor(Math.random() * 256) + 64;
+  let blue = Math.floor(Math.random() * 256) + 64;
+
+  // Construct a color withe the given values
+  let bgColor = "rgb(" + red + "," + green + "," + blue + ")";
+
+  // Set the background to that color
+  document.body.style.background = bgColor;
+}
+
+function loadTrack(track_index) {
+  clearInterval(updateTimer);
+  resetValues();
+  curr_track.src = track_list[track_index].path;
+  curr_track.load();
+
+  track_art.style.backgroundImage = "url(" + track_list[track_index].image + ")";
+  track_name.textContent = track_list[track_index].name;
+  track_artist.textContent = track_list[track_index].artist;
+
+
+  updateTimer = setInterval(seekUpdate, 1000);
+  curr_track.addEventListener("ended", nextTrack);
+  random_bg_color();
+}
+
+function resetValues() {
+  curr_time.textContent = "00:00";
+  total_duration.textContent = "00:00";
+  seek_slider.value = 0;
+}
+
+// Load the first track in the tracklist
+loadTrack(track_index);
+
+function playpauseTrack() {
+  if (!isPlaying) playTrack();
+  else pauseTrack();
+}
+
+function playTrack() {
+  curr_track.play();
+  isPlaying = true;
+  playpause_btn.innerHTML = '<i class="fa fa-pause-circle fa-5x"></i>';
+}
+
+function pauseTrack() {
+  curr_track.pause();
+  isPlaying = false;
+  playpause_btn.innerHTML = '<i class="fa fa-play-circle fa-5x"></i>';;
+}
+
+function nextTrack() {
+  if (track_index < track_list.length - 1)
+    track_index += 1;
+  else track_index = 0;
+  loadTrack(track_index);
+  playTrack();
+}
+
+function prevTrack() {
+  if (track_index > 0)
+    track_index -= 1;
+  else track_index = track_list.length;
+  loadTrack(track_index);
+  playTrack();
+}
+
+
+function setVolume() {
+  curr_track.volume = volume_slider.value / 100;
+}
+
+function seekUpdate() {
+  let seekPosition = 0;
+
+  if (!isNaN(curr_track.duration)) {
+    seekPosition = curr_track.currentTime * (100 / curr_track.duration);
+
+    seek_slider.value = seekPosition;
+
+    let currentMinutes = Math.floor(curr_track.currentTime / 60);
+    let currentSeconds = Math.floor(curr_track.currentTime - currentMinutes * 60);
+    if (currentSeconds < 10) { currentSeconds = "0" + currentSeconds; }
+    if (currentMinutes < 10) { currentMinutes = "0" + currentMinutes; }
+
+    curr_time.textContent = currentMinutes + ":" + currentSeconds;
+  }
+}
+
+</script>
+</body>
+</html>
