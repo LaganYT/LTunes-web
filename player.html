@@ -22,8 +22,8 @@ function loadFileObject(fileObj, loadedCallback) { var reader = new FileReader()
 function onSoundLoaded(evt) { byId('sound').src = evt.target.result; byId('sound').play(); } 
 </script>
 <body> 
-<h3>Select Song Below</h3>
-<input type="file" id="mFileInput"/> <strong>Audio only</strong><br> <audio id="sound" controls loop="true"></audio>
+<h3>Select Song Below</h3><br>
+<input type="file" id="mFileInput"/><br> <audio id="sound" controls loop="true"></audio>
 </center>
 <br>
 <style>
