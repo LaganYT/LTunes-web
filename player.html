@@ -12,8 +12,6 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 </head>
 <div class="Logo" onclick="location.href = 'https://www.ltunes.gq/'" ;><img src="https://ltunes.gq/assets/Logo.png" width="50" height="50">LTunes</div>
-<center><div class="wrapper">
-<div class="profile-wrap">
   <script> "use strict"; 
 function byId(e){return document.getElementById(e);} window.addEventListener('load', onDocLoaded, false); 
 function onDocLoaded() { byId('mFileInput').addEventListener('change', onChosenFileChange, false); } 
@@ -23,8 +21,8 @@ function onSoundLoaded(evt) { byId('sound').src = evt.target.result; byId('sound
 </script>
 <body> 
 <h3>Select Song Below</h3><br>
-<input type="file" id="mFileInput"/><br> <audio id="sound" controls loop="true"></audio>
-</center>
+<input type="file" id="mFileInput"/><br> 
+<audio id="sound" controls loop="true"></audio>
 <br>
 <style>
 	@font-face {
