@@ -1,0 +1,700 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>myTuner - Widgets</title>
+
+    <link href="https://static2.mytuner.mobi/static/broadcaster-backoffice/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://static2.mytuner.mobi/static/broadcaster-backoffice/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    
+    <!-- Sweet Alert -->
+    <link href="https://static2.mytuner.mobi/static/broadcaster-backoffice/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="https://static2.mytuner.mobi/static/broadcaster-backoffice/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="https://static2.mytuner.mobi/static/broadcaster-backoffice/css/plugins/select2/select2.min.css" rel="stylesheet">
+    <!-- TouchSpin -->
+    <link href="https://static2.mytuner.mobi/static/broadcaster-backoffice/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+    <!-- Switchery -->
+    <link href="https://static2.mytuner.mobi/static/broadcaster-backoffice/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+    <style>
+        .click-select > div {
+            padding-bottom: 10px;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .click-select > div:hover {
+            border: 2px solid #4eb29d;
+        }
+        .click-select > div.selected {
+            border-color: #2c8f7b;
+            font-weight: bold;
+        }
+
+        .option-select > div {
+            color: blue;
+            border-bottom: 1px blue dashed;
+            cursor: pointer;
+        }
+        .option-select > div:hover {
+            color: darkblue;
+        }
+        .option-select > div.selected {
+            color: black;
+            border-bottom: 1px transparent solid;
+            font-weight: bold;
+        }
+
+        #button-sizes-select > div, #banner-sizes-select > div {
+             margin: 10px;
+             display: inline-block;
+        }
+
+        .select-with-reset {
+            display: flex;
+        }
+        .select-with-reset .col-sm-3 {
+            position: relative;
+        }
+        .select-with-reset .col-sm-3 div {
+            border: 1px solid black;
+            padding: 5px;
+            border-radius: 6px;
+            background-color: rgb(240,240,240);
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .select-with-reset .col-sm-3 div:hover {
+            background-color: rgb(200, 200, 200);
+        }
+        .select-with-reset input {
+            cursor: pointer;
+        }
+
+        .input-group.bootstrap-touchspin {
+            z-index: 0;
+        }
+
+        #preview-container {
+            border: 1px dashed grey;
+            min-height: 150px;
+            border-radius: 10px;
+            padding: 10px;
+            overflow: scroll;
+        }
+
+        #preview-stick {
+            background-color: white;
+            z-index: 1;
+            position: relative;
+            padding-top: 5px;
+        }
+        #preview-stick.pinned {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 60px;
+            box-shadow: 0 10px 10px -15px black;
+        }
+    </style>
+
+
+    <link href="https://static2.mytuner.mobi/static/broadcaster-backoffice/css/animate.css" rel="stylesheet">
+    <link href="https://static2.mytuner.mobi/static/broadcaster-backoffice/css/style.css" rel="stylesheet">
+
+    <style>
+        .nav-tabs {
+            background-color: #88423b;
+            border-top: 1px solid darkgray;
+        }
+        .nav-tabs > li > a {
+            color: #DDD;
+        }
+        .nav-tabs > li > a:hover {
+            color: #FFF;
+        }
+    </style>
+</head>
+
+<body class="pace-done fixed-nav fixed-nav-basic" style="background-color: #FFFFFF;">
+
+    <div id="wrapper">
+            
+    <div class="row wrapper border-bottom white-bg page-heading" style="display: none;">
+        <div class="col-lg-12">
+            <h1>Widgets</h1>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/widgets/" target="_top"> Widgets </a>
+                </li>
+                <li class="active">
+                    <strong>Player</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="fh-breadcrumb">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="/widgets/player/" target="_top">Player</a></li>
+                <li class=""><a href="/widgets/playlist/" target="_top">Playlist / Song history</a></li>
+                <li class=""><a href="/widgets/charts/" target="_top">Charts / Top</a></li>
+                <li class=""><a href="/widgets/schedule/" target="_top">Schedule</a></li>
+                <li class=""><a href="/widgets/buttons-and-banners/" target="_top">Banners / Buttons</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                    <div class="panel-body">
+                        <div class="row" style="display: flex;">
+                            <div class="col-lg-8" style="max-width: 66.66%; flex: 0 0 66.66%;">
+                                <h2>Preview</h2>
+                                <div id="preview-stick" class="">
+                                    <div id="preview-container"></div>
+                                    <div class="hr-line-dashed"></div>
+                                </div>
+
+                                <h2>Configuration</h2>
+                                
+                                <div class="form-horizontal" style="margin: 35px 0;">
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Selected radio station</label>
+                                        <div class="col-sm-9">
+                                            <select id="radio-select" name="radios" class="select2_radios form-control"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Show song history</label>
+                                        <div class="col-sm-2">
+                                            <input id="widget-hide-history" type="checkbox" class="js-switch" checked />
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Widget behaviour</label>
+                                        <div class="col-sm-9">
+                                            <div class="i-checks"><label id="widget-action-blank"> <input type="radio" checked="checked" value="blank" name="action"> <i></i>Open in new tab</label></div><br>
+                                            <div class="i-checks"><label id="widget-action-self"> <input type="radio" value="self" name="action"> <i></i>Open in current tab</label></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">
+                                            Anchor type
+                                            <br>
+                                            <small class="text-navy">Link to myTuner</small>
+                                        </label>
+                                        <div class="col-sm-5">
+                                            <div class="i-checks text-center"><label id="dofollow-link"> <input type="radio" checked="checked" value="dofollow" name="anchor"> <i></i>Do follow (default)</label></div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="i-checks text-center"><label id="nofollow-link"> <input type="radio" value="nofollow" name="anchor"> <i></i>No follow</label></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Custom text instead radio name</label>
+                                        <div class="col-sm-2">
+                                            <input id="widget-custom-name" type="checkbox" class="js-switch" />
+                                        </div>
+                                        <div class="col-sm-7" style="display: none;">
+                                            <input id="anchor-text" type="text" class="form-control" placeholder="Custom text">
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">
+                                            Autoplay
+                                            <br>
+                                            <small class="text-navy">May not work on every browser</small>
+                                        </label>
+                                        <div class="col-sm-2">
+                                            <input id="widget-autoplay" type="checkbox" class="js-switch" />
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">
+                                            Max widget width
+                                            <br>
+                                            <small class="text-navy">0 represents none</small>
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <input id="widget-max-width" class="touchspin-w" type="text" value="0" name="widgetwidth">
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">
+                                            Max widget height
+                                            <br>
+                                            <small class="text-navy">0 represents none</small>
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <input id="widget-max-height" class="touchspin-w" type="text" value="500" name="widgetheight">
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Round border</label>
+                                        <div class="col-sm-9 ">
+                                            <input id="widget-border-switch" type="checkbox" class="js-switch" checked />
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Selected powered by logo</label>
+                                        <div class="col-sm-9">
+                                            <select id="logo-select" name="logo" class="select2_logos form-control"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group select-with-reset">
+                                                <label class="col-sm-5 control-label">Background color</label>
+                                                <div class="col-sm-4">
+                                                    <input id="background-color" type="color" value="#F9F0F0" style="border:0; padding: 0; width: 75px; height: 75px;">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div onclick="document.getElementById('background-color').value='#F9F0F0'; widget.set_background_color('#F9F0F0');">Reset</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group select-with-reset">
+                                                <label class="col-sm-5 control-label">Font color</label>
+                                                <div class="col-sm-4">
+                                                    <input id="font-color" type="color" value="#3D3D3D" style="border:0; padding: 0; width: 75px; height: 75px;">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div onclick="document.getElementById('font-color').value='#3D3D3D'; widget.set_font_color('#3D3D3D');">Reset</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group select-with-reset">
+                                                <label class="col-sm-5 control-label">Secondary font color</label>
+                                                <div class="col-sm-4">
+                                                    <input id="secondary-font-color" type="color" value="#3D3D3D" style="border:0; padding: 0; width: 75px; height: 75px;">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div onclick="document.getElementById('secondary-font-color').value='#3D3D3D'; widget.set_secondary_font_color('#3D3D3D');">Reset</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group select-with-reset">
+                                                <label class="col-sm-5 control-label">Border width</label>
+                                                <div class="col-sm-7">
+                                                    <input id="border-width" class="touchspin" type="text" value="1" name="borderwidth">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group select-with-reset">
+                                                <label class="col-sm-5 control-label">Border color</label>
+                                                <div class="col-sm-4">
+                                                    <input id="border-color" type="color" value="#817f80" style="border:0; padding: 0; width: 75px; height: 75px;">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div onclick="document.getElementById('border-color').value='#817f80'; widget.set_border_color('#817f80');">Reset</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group select-with-reset">
+                                                <label class="col-sm-5 control-label">Inner border width</label>
+                                                <div class="col-sm-7">
+                                                    <input id="cta-border-width" class="touchspin" type="text" value="1" name="ctaborderwidth">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group select-with-reset">
+                                                <label class="col-sm-5 control-label">Inner border color</label>
+                                                <div class="col-sm-4">
+                                                    <input id="cta-border-color" type="color" value="#817f80" style="border:0; padding: 0; width: 75px; height: 75px;">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div onclick="document.getElementById('cta-border-color').value='#817f80'; widget.set_cta_border_color('#817f80');">Reset</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="hr-line-dashed"></div>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="col-lg-1" style="max-width: 8.33%; flex: 0 0 8.33%;"></div>
+                            <div class="col-lg-3" style="max-width: 25%; flex: 0 0 25%;">
+                                <div id="code-stick" style="position: -webkit-sticky; /* Safari */ position: sticky; top: 80px;">
+                                    <h3 style="background-color: lightgoldenrodyellow; padding: 5px;">
+                                        <i class="fa fa-files-o"></i> Copy and paste this code into your site:
+                                    </h3>
+                                    <textarea id="code-container" readonly="readonly" style="width: 100%; height: 250px; padding: 3px 10px; border-radius: 5px; "></textarea>
+                                    <button onclick="copytoclipboard()" style="color: white; background: grey; border: 1px solid black; border-radius: 6px; font-size: large; width: 100%;"><i class="fa fa-files-o" style=""></i> Copy to clipboard</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/jquery-3.1.1.min.js"></script>
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/bootstrap.min.js"></script>
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/inspinia.js"></script>
+    <!--<script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/plugins/pace/pace.min.js"></script>-->
+
+    
+
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/widget-builder.js"></script>
+
+    <!-- Sweet alert -->
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- iCheck -->
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/plugins/iCheck/icheck.min.js"></script>
+    <!-- Select2 -->
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/plugins/select2/select2.full.min.js"></script>
+    <!-- TouchSpin -->
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+    <!-- Switchery -->
+    <script src="https://static2.mytuner.mobi/static/broadcaster-backoffice/js/plugins/switchery/switchery.js"></script>
+
+    <script>
+        widget_id = "w6QhZsKkw47DscKuZ8ORw7vDrMKiw7Eyw43DjynCpMOEX2c=";
+        widget = new PlayerWidget();
+        widget.set_target(widget.targets.RADIO);
+        $(document).ready(function () {
+            /* LISTENERS */
+            document.getElementById("code-container").addEventListener("mouseup", function (){
+                this.select();
+            });
+            document.getElementById("code-container").addEventListener("copy", function (){
+                setTimeout( function(){
+                    swal({
+                        title: "Copied to clipboard!",
+                        text: "The text has been copied to clipboard. Now paste it in the HTML code of your website!",
+                        type: "success"
+                    });
+                }, 1);
+                parent.ga('send', 'event', 'Create widget', 'Player');
+            });
+            document.getElementById("anchor-text").addEventListener("change", function (){
+                widget.set_anchor_text(this.value);
+            });
+            document.getElementById("background-color").addEventListener("change", function (){
+                widget.set_background_color(this.value);
+            });
+            document.getElementById("font-color").addEventListener("change", function (){
+                widget.set_font_color(this.value);
+            });
+            document.getElementById("secondary-font-color").addEventListener("change", function (){
+                widget.set_secondary_font_color(this.value);
+            });
+            document.getElementById("border-color").addEventListener("change", function (){
+                widget.set_border_color(this.value);
+            });
+            document.getElementById("cta-border-color").addEventListener("change", function (){
+                widget.set_cta_border_color(this.value);
+            });
+            document.getElementById("widget-border-switch").addEventListener("change", function (){
+                widget.set_border(this.checked ? widget.borders.ROUNDED : widget.borders.SQUARE);
+            });
+            document.getElementById("widget-hide-history").addEventListener("change", function (){
+                widget.set_hide_history(!this.checked);
+            });
+            document.getElementById("widget-custom-name").addEventListener("change", function (){
+                if (this.checked) {
+                    $("#anchor-text").parent().show();
+                    widget.set_anchor_text(document.getElementById('anchor-text').value);
+                    widget.set_use_custom_text(true);
+                }
+                else {
+                    $("#anchor-text").parent().hide();
+                    widget.set_anchor_text('');
+                    widget.set_use_custom_text(false);
+                }
+            });
+            document.getElementById("widget-autoplay").addEventListener("change", function (){
+                widget.set_autoplay(this.checked);
+            });
+            // iCheckbox
+            $("#main-page-link").on("ifChecked", function (){
+                $("#radio-select").parent().hide();
+                widget.set_target(widget.targets.MAIN);
+            });
+            $("#radio-page-link").on("ifChecked", function (){
+                $("#radio-select").parent().show();
+                widget.set_target(widget.targets.RADIO);
+            });
+            $("#dofollow-link").on("ifChecked", function (){
+                widget.set_anchor(widget.anchors.FOLLOW);
+            });
+            $("#nofollow-link").on("ifChecked", function (){
+                widget.set_anchor(widget.anchors.NOFOLLOW);
+            });
+            $("#widget-action-self").on("ifChecked", function (){
+                widget.set_action(widget.actions.SELF);
+            });
+            $("#widget-action-blank").on("ifChecked", function (){
+                widget.set_action(widget.actions.BLANK);
+            });
+
+            /* INITIALIZATION */
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+            $(".select2_radios").select2({
+                ajax: {
+                    url: "/ajax/filter-radios/",
+                    type : 'POST',
+                    dataType: 'json',
+                    delay: 100,
+                    data: function (params) {
+                        return {
+                            'search-type': "all",
+                            'search-term': params.term,
+                            "page": params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+
+                        results = []
+                        data.radios.forEach(function(val, index) {
+                            results.push({"id": ""+val.url, "text": val.name, "radio_id": val.value, "radio_image":val.image});
+                        });
+
+                        return {
+                            "results": results,
+                            "pagination": {
+                                "more": data.more_pages
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Radio name...',
+                minimumInputLength: 1,
+                width: "100%"
+            });
+            $(".select2_radios").on('select2:select', function(event) {
+                widget.set_selected_radio_id(event.params.data.radio_id);
+                widget.set_radio_image_url(event.params.data.radio_image);
+                widget.set_radio_name(event.params.data.text);
+                widget.set_target_url(event.params.data.id);
+            });
+            $(".click-select > div").on("click", function (){
+                $(this).parent().children(".selected").removeClass("selected");
+                $(this).addClass("selected");
+            });
+            $(".option-select > div").on("click", function (){
+                $(this).parent().children(".selected").removeClass("selected");
+                $(this).addClass("selected");
+            });
+            $(".touchspin").TouchSpin({
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white',
+                max: 2
+            });
+            $(".touchspin-w").TouchSpin({
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white',
+                max: 5000,
+                forcestepdivisibility: 'none',
+                decimals: 0,
+                step: 25
+            });
+            $('#border-width').on('change', function (event) {
+                widget.set_border_width(this.value);
+            });
+            $('#cta-border-width').on('change', function (event) {
+                widget.set_cta_border_width(this.value);
+            });
+            $('#widget-max-width').on('change', function (event) {
+                old = window.oldW || 0;
+                if (this.value > 0 && this.value < 400) {
+                    if (old > this.value) {
+                        this.value = 0;
+                    } else {
+                        this.value = 400;
+                    }
+                }
+                widget.set_max_width(this.value);
+                window.oldW = this.value;
+            });
+            $('#widget-max-height').on('change', function (event) {
+                old = window.oldH || 500;
+                if (this.value > 0 && this.value < 200) {
+                    if (old > this.value) {
+                        this.value = 0;
+                    } else {
+                        this.value = 200;
+                    }
+                }
+                widget.set_max_height(this.value);
+                window.oldH = this.value;
+            });
+            var elems = $('.js-switch');
+            elems.each(function(dump, elem){
+                new Switchery(elem, { color: '#1AB394' });
+            });
+            $(".select2_fdow").select2({
+                placeholder: 'Select first day of week...',
+                minimumInputLength: 0,
+                width: "100%"
+            });
+            $(".select2_fdow").on('select2:select', function(event) {
+                widget.set_fdow(event.params.data.id);
+            });
+            $(".select2_logos").select2({
+                placeholder: 'Select logo...',
+                minimumInputLength: 0,
+                width: "100%",
+                data: [
+                    {id: widget.logos.NORMAL, text: "Normal"},
+                    {id: widget.logos.BLACK, text: "Black"},
+                    {id: widget.logos.WHITE, text: "White"}
+                ]
+            });
+            $(".select2_logos").on('select2:select', function(event) {
+                widget.set_logo(event.params.data.id);
+            });
+
+            // load radio
+            if (window.parent.location.href.indexOf("?f=") > -1 || window.parent.location.href.indexOf("&f=") > -1) {
+                var rid = null;
+                var parts = window.parent.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                    if (key === 'f') {
+                        rid = value;
+                    }
+                });
+                if (rid) {
+                    $.ajax({
+                        url: "/ajax/fetch-radio/",
+                        type : 'POST',
+                        dataType: 'json',
+                        data: {'search-type': "all", 'id': rid},
+                        success: function (data) {
+                            widget.set_selected_radio_id(data.info.value);
+                            widget.set_radio_image_url(data.info.image);
+                            widget.set_radio_name(data.info.name);
+                            widget.set_target_url(data.info.url);
+                        },
+                        cache: true
+                    });
+                }
+            }
+        });
+        function copytoclipboard() {
+            var copyText = document.getElementById("code-container");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            document.getSelection().removeAllRanges();
+            copyText.blur();
+        }
+    </script>
+
+    <input type="hidden" name="csrfmiddlewaretoken" value="tAgyofRAGwJPXNOPKO171t3KG9aMHeG9uT85PfpoFtG6jr6xYnZCCzvuKhqB858y">
+    <script>
+        var csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0];
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        $.ajaxSetup({
+         beforeSend: function(xhr, settings) {
+             function getCookie(name) {
+                 var cookieValue = null;
+                 if (document.cookie && document.cookie != '') {
+                     var cookies = document.cookie.split(';');
+                     for (var i = 0; i < cookies.length; i++) {
+                         var cookie = jQuery.trim(cookies[i]);
+                         // Does this cookie string begin with the name we want?
+                         if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                             break;
+                         }
+                     }
+                 }
+                 return cookieValue;
+             }
+             if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+             }
+         }
+    });
+    </script>
+    
+</body>
+</html>
