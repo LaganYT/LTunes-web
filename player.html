@@ -25,6 +25,14 @@ function onSoundLoaded(evt) { byId('sound').src = evt.target.result; byId('sound
 <input type="file" id="mFileInput"/><br> 
 <audio id="sound" controls loop="true"></audio>
 	<br></div>
+	 <script type="text/javascript">
+// Popup window code
+function newPopup(url) {
+	popupWindow = window.open(
+		url,'popUpWindow','height=300,width=400,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
+}
+</script>
+<p><a href="JavaScript:newPopup('/player.html');"><img src="https://img.icons8.com/ios/452/open-in-popup.png"></img></a></p>
 <style>
 	@font-face {
   font-family: LM;
