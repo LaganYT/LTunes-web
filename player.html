@@ -21,7 +21,7 @@ function loadFileObject(fileObj, loadedCallback) { var reader = new FileReader()
 function onSoundLoaded(evt) { byId('sound').src = evt.target.result; byId('sound').play(); } 
 </script>
 <body> 
-<h3>Select Song Below</h3><br>
+<h3>Select Song Below <a href="JavaScript:newPopup('/player.html');"><img src="https://img.icons8.com/ios/452/open-in-popup.png"></img></a></h3><br>
 <input type="file" id="mFileInput"/><br> 
 <audio id="sound" controls loop="true"></audio>
 	<br></div>
@@ -32,7 +32,6 @@ function newPopup(url) {
 		url,'popUpWindow','height=300,width=400,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
 }
 </script>
-<p><a href="JavaScript:newPopup('/player.html');"><img src="https://img.icons8.com/ios/452/open-in-popup.png"></img></a></p>
 <style>
 	@font-face {
   font-family: LM;
