@@ -18,20 +18,19 @@ function byId(e){return document.getElementById(e);} window.addEventListener('lo
 function onDocLoaded() { byId('mFileInput').addEventListener('change', onChosenFileChange, false); } 
 function onChosenFileChange(evt) { var fileType = this.files[0].type; if (fileType.indexOf('audio') != -1) loadFileObject(this.files[0], onSoundLoaded);  } 
 function loadFileObject(fileObj, loadedCallback) { var reader = new FileReader(); reader.onload = loadedCallback; reader.readAsDataURL( fileObj ); } 
-function onSoundLoaded(evt) { byId('sound').src = evt.target.result; byId('sound').play(); } 
 </script>
 <body> 
 <h3>Select Song Below <!--<a href="JavaScript:newPopup('/player.html');"><img width="50px" height="50px" src="/assets/popout.png"></img></a>--></h3><br>
 <input type="file" id="mFileInput" accept=".mp3,audio/*" multiple><br> 
 <audio id="sound" controls autoplay></audio>
 	<br></div>
-	 <script type="text/javascript">
-// Popup window code
-function newPopup(url) {
-	popupWindow = window.open(
-		url,'popUpWindow','height=300,width=400,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
-}
-</script>
+	 <script>
+	 for (let i = 0; i < files.length; i++) {
+    let file = files.item(i);
+    console.log(file.name);
+function onSoundLoaded(evt) { byId('sound').src = evt.target.result; byId('sound').play(); } 
+	 }
+	 </script>
 <style>
 	@font-face {
   font-family: LM;
