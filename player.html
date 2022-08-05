@@ -31,15 +31,18 @@ document.getElementById("file").addEventListener("change", handleFiles, false);
 <audio id="player" controls loop>
   <source src="" id="audio" />
 </audio>-->
-<script type="text/javascript">
-    function playFile(obj){
-        var url = obj.files[0].name;
-        document.getElementById("sound").src=url;
-        document.getElementById("sound").play()
-    }
-</script>
-<input type="file" id="audio" onchange="playFile(this)" />
-<audio id="sound"></audio>
+<script>
+input.onchange = function(e){
+  var sound = document.getElementById('sound');
+  sound.src = URL.createObjectURL(this.files[0]);
+  // not really needed in this exact case, but since it is really important in other cases,
+  // don't forget to revoke the blobURI when you don't need it
+  sound.onend = function(e) {
+    URL.revokeObjectURL(this.src);
+  }
+}</script>
+<input type="file" id="input"/>
+<audio id="sound" controls></audio>
 	<br></div>
 	 <script type="text/javascript">
 // Popup window code
