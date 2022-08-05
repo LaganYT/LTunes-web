@@ -31,8 +31,6 @@ document.getElementById("file").addEventListener("change", handleFiles, false);
 <audio id="player" controls loop>
   <source src="" id="audio" />
 </audio>-->
-<input type="file" id="audio" onchange="playFile(this)" />
-<audio id="sound"></audio>
 <script type="text/javascript">
     function playFile(obj){
         var url = obj.files[0].name;
@@ -40,6 +38,8 @@ document.getElementById("file").addEventListener("change", handleFiles, false);
         document.getElementById("sound").play()
     }
 </script>
+<input type="file" id="audio" onchange="playFile(this)" />
+<audio id="sound"></audio>
 	<br></div>
 	 <script type="text/javascript">
 // Popup window code
