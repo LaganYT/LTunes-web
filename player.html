@@ -31,21 +31,15 @@ document.getElementById("file").addEventListener("change", handleFiles, false);
 <audio id="player" controls loop>
   <source src="" id="audio" />
 </audio>-->
-<script>
-function handleFiles(event) {
-	var files = event.target.files;
-	$("#audio").attr("src", URL.createObjectURL(files[0]));
-	$("#player")[0].load();
-    $("#player")[0].play();
-}
-
-document.getElementById("file").addEventListener("change", handleFiles, false);
-
+<input type="file" id="audio" onchange="playFile(this)" />
+<audio id="sound"></audio>
+<script type="text/javascript">
+    function playFile(obj){
+        url = obj.files[0].name;
+        document.getElementById("sound").src=url;
+        document.getElementById("sound").play()
+    }
 </script>
-<input type="file" id="file" />
-<audio id="player" controls>
-  <source src="" id="audio" />
-</audio>
 	<br></div>
 	 <script type="text/javascript">
 // Popup window code
