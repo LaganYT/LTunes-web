@@ -14,7 +14,7 @@
 </head>
 <div class="Logo" onclick="location.href = 'https://www.ltunes.gq/'" ;><img src="https://ltunes.gq/assets/Logo.png" width="50" height="50">LTunes</div>
  <div class="w3-display-middle">
-<script>
+<!--<script>
 function handleFiles(event) {
 	var files = event.target.files;
 	$("#audio").attr("src", URL.createObjectURL(files[0]));
@@ -29,6 +29,21 @@ document.getElementById("file").addEventListener("change", handleFiles, false);
 <h3>Select Song Below</h3><br>
 <input type="file" id="file" accept=".mp3,audio/*" multiple><br> 
 <audio id="player" controls loop>
+  <source src="" id="audio" />
+</audio>-->
+<script>
+function handleFiles(event) {
+	var files = event.target.files;
+	$("#audio").attr("src", URL.createObjectURL(files[0]));
+	$("#player")[0].load();
+    $("#player")[0].play();
+}
+
+document.getElementById("file").addEventListener("change", handleFiles, false);
+
+</script>
+<input type="file" id="file" />
+<audio id="player" controls>
   <source src="" id="audio" />
 </audio>
 	<br></div>
