@@ -14,20 +14,23 @@
 <div class="Logo" onclick="location.href = 'https://www.ltunes.gq/'" ;><img src="https://ltunes.gq/assets/Logo.png" width="50" height="50">LTunes</div>
  <div class="w3-display-middle">
 <script>
-input.onchange = function(e){
-  var sound = document.getElementById('sound');
-  sound.src = URL.createObjectURL(this.files[0]);
-  // not really needed in this exact case, but since it is really important in other cases,
-  // don't forget to revoke the blobURI when you don't need it
-  sound.onend = function(e) {
-    URL.revokeObjectURL(this.src);
-  }
+function handleFiles(event) {
+	var files = event.target.files;
+	$("#audio").attr("src", URL.createObjectURL(files[0]));
+	$("#player")[0].load();
+    $("#player")[0].play();
 }
+
+document.getElementById("file").addEventListener("change", handleFiles, false);
+
 </script>
 <body> 
 <h3>Select Song Below</h3><br>
-<input type="file" id="input" accept=".mp3,audio/*" multiple><br> 
-<audio id="sound" controls loop></audio>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<input type="file" id="file" accept=".mp3,audio/*" multiple><br> 
+<audio id="player" controls loop>
+  <source src="" id="audio" />
+</audio>
 	<br></div>
 	 <script type="text/javascript">
 // Popup window code
