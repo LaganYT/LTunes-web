@@ -35,7 +35,7 @@ document.getElementById("file").addEventListener("change", handleFiles, false);
 <audio id="sound"></audio>
 <script type="text/javascript">
     function playFile(obj){
-        url = obj.files[0].name;
+        var url = obj.files[0].name;
         document.getElementById("sound").src=url;
         document.getElementById("sound").play()
     }
