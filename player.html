@@ -13,16 +13,18 @@
 </head>
 <div class="Logo" onclick="location.href = 'https://www.ltunes.gq/'" ;><img src="https://ltunes.gq/assets/Logo.png" width="50" height="50">LTunes</div>
  <div class="w3-display-middle">
-<script> "use strict"; 
-function byId(e){return document.getElementById(e);} window.addEventListener('load', onDocLoaded, false); 
-function onDocLoaded() { byId('mFileInput').addEventListener('change', onChosenFileChange, false); } 
-function onChosenFileChange(evt) { var fileType = this.files[0].type; if (fileType.indexOf('audio') != -1) loadFileObject(this.files[0], onSoundLoaded);  } 
-function loadFileObject(fileObj, loadedCallback) { var reader = new FileReader(); reader.onload = loadedCallback; reader.readAsDataURL( fileObj ); } 
-function onSoundLoaded(evt) { byId('sound').src = evt.target.result; byId('sound').play(); } 
-</script>
+<script>input.onchange = function(e){
+  var sound = document.getElementById('sound');
+  sound.src = URL.createObjectURL(this.files[0]);
+  // not really needed in this exact case, but since it is really important in other cases,
+  // don't forget to revoke the blobURI when you don't need it
+  sound.onend = function(e) {
+    URL.revokeObjectURL(this.src);
+  }
+}</script>
 <body> 
 <h3>Select Song Below</h3><br>
-<input type="file" id="mFileInput" accept=".mp3,audio/*" multiple><br> 
+<input type="file" id="file" accept=".mp3,audio/*" multiple><br> 
 <audio id="sound" controls loop></audio>
 	<br></div>
 	 <script type="text/javascript">
