@@ -1,3 +1,10 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LTunes</title>
+<link rel="apple-touch-icon" sizes="180x180" href="http://ltunes.gq/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://ltunes.gq/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="http://ltunes.gq/favicon-16x16.png">
+<link rel="manifest" href="http://ltunes.gq/site.webmanifest">
+<meta charset="utf-8">
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css'>
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css'><link rel="stylesheet" href="./style.css">
 <body>
@@ -18,7 +25,7 @@
             </div>
          </div>
          <div class="mx-auto">
-            <audio id="track" src="" type="audio/mp3"></audio>
+                     <audio id="track" src="" type="audio/mp3"></audio>
             <div class="player d-none" style="width:300px;">
                <div class="progress p-1">
                   <input id="timeslieder" class="timeslieder" type="range" value="0" min="0" max="100" step="0.001" />
@@ -28,6 +35,8 @@
                      <div id="start" class="control-icon"><i class="fas fa-play"></i></div>
                      <div id="reset" class="control-icon"><i class="fas fa-redo-alt"></i></div>
                      <span id="duration">00:00:00</span>
+                     <button onclick="location.href='https://ltunes.gq/player'">Select new song</button>
+                     
                   </div>
                                  </div>
             </div>
