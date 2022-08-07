@@ -1,293 +1,242 @@
-<head>
-<title>LTunes</title>
-<link rel="shortcut icon" type="image/jpg" href="https://LTunes.gq/assets/Logo.png" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="utf-8">
-<script async src="https://arc.io/widget.min.js#eMnAzx6E"></script>
-<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=PT+Sans:700" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=PT+Sans:400" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<div class="Logo" onclick="location.href = 'https://www.ltunes.gq/'" ;><img src="https://ltunes.gq/assets/Logo.png" width="50" height="50">LTunes</div>
- <div class="w3-display-middle">
-<!--<script>
-function handleFiles(event) {
-	var files = event.target.files;
-	$("#audio").attr("src", URL.createObjectURL(files[0]));
-	$("#player")[0].load();
-    $("#player")[0].play();
-}
-
-document.getElementById("file").addEventListener("change", handleFiles, false);
-
-</script>
-<body> 
-<iframe src="jb.html" style="border:0px #ffffff none;" name="myiFrame" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="400px" width="600px" allowfullscreen></iframe>
-	<br></div>
-	 <script type="text/javascript">
-// Popup window code
-function newPopup(url) {
-	popupWindow = window.open(
-		url,'popUpWindow','height=300,width=400,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
-}
-</script>
-<style>
-	@font-face {
-  font-family: LM;
-  src: url(LemonMilk.ttf);
-}
-	.Logo {
-	font-family: LM;
-	}
-	body {
-	 background: #141414;
-	 font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-	 font-weight: 300;
-	 color: WHITE;
-	 opacity: 0;
-	 animation: fade-in 500ms ease 200ms 1 forwards;
-}
- body h1 {
-	 color: WHITE;
-	 font-size: 50px;
-}
-
- @keyframes fade-in {
-	 0% {
-		 opacity: 0;
-		 transform: scale(1.2);
-	}
-	 100% {
-		 opacity: 1;
-		 transform: scale(1);
-	}
-}
- .wrapper {
-	 margin: 100px 0;
-	 text-align: center;
-}
- .profile {
-	 width: 150px;
-}
- .profile-wrap {
-	 display: flex;
-	 flex-wrap: wrap;
-	 justify-content: space-between;
-	 max-width: 800px;
-	 margin: 50px auto;
-}
- .profile-icon {
-	 width: 150px;
-	 height: 150px;
-	 border: 6px solid #1f1f1f;
-	 transition: all 300ms ease;
-}
- .profile-name {
-	 margin: 20px 0;
-	 line-height: 1.25em;
-	 transition: all 300ms ease;
-}
- .profile:hover .profile-icon {
-	 border: 6px solid #ebecec;
-}
- .profile:hover .profile-name {
-	 color: #ebecec;
-}
- .profile1 #left-brow {
-	 transform-origin: center 80%;
-	 animation: raise 10s ease-in-out infinite;
-}
- .profile1 #sunglasses {
-	 transform-origin: center 100%;
-	 animation: tilt 10s 250ms ease infinite;
-}
- .profile1 #mustache {
-	 transform-origin: center 90%;
-	 animation: mustache 10s 0ms ease infinite;
-}
- @keyframes raise {
-	 0% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 10% {
-		 transform: translateY(-10px) rotate(5deg);
-	}
-	 20% {
-		 transform: translateY(-10px) rotate(5deg);
-	}
-	 25% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 100% {
-		 transform: translateY(0px);
-	}
-}
- @keyframes tilt {
-	 0% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 10% {
-		 transform: translateY(-2px) rotate(5deg);
-	}
-	 20% {
-		 transform: translateY(-2px) rotate(5deg);
-	}
-	 25% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 100% {
-		 transform: translateY(0px);
-	}
-}
- @keyframes mustache {
-	 20% {
-		 transform: translateY(0px) scale(1);
-	}
-	 30% {
-		 transform: translateY(4px) rotate(-3deg) scale(1.03);
-	}
-	 40% {
-		 transform: translateY(0px) scale(1);
-	}
-}
- .profile2 #left-pupil, .profile2 #right-pupil {
-	 animation: side-to-side 10s ease-in-out infinite alternate;
-}
- .profile2 #left-eye-top, .profile2 #right-eye-top {
-	 transform-origin: center bottom;
-	 animation: wide-open 10s ease-in-out infinite alternate;
-}
- .profile2 #bottom-beak, .profile2 #gillard {
-	 transform-origin: center top;
-	 animation: chew 20s ease-in-out infinite;
-}
- .profile2 #hair {
-	 animation: hair 4s ease infinite alternate;
-}
- @keyframes side-to-side {
-	 0% {
-		 transform: translateX(0px);
-	}
-	 5% {
-		 transform: translateX(-5px);
-	}
-	 10% {
-		 transform: translateX(-5px);
-	}
-	 20% {
-		 transform: translateX(5px);
-	}
-	 25% {
-		 transform: translateX(5px);
-	}
-	 35% {
-		 transform: translateX(-5px);
-	}
-	 40% {
-		 transform: translateX(-5px);
-	}
-	 45% {
-		 transform: translateX(0px);
-	}
-}
- @keyframes wide-open {
-	 0% {
-		 opacity: 0;
-	}
-	 40% {
-		 opacity: 0;
-		 transform: scale(1, 0);
-	}
-	 42% {
-		 opacity: 1;
-		 transform: scale(1, 1);
-	}
-	 100% {
-		 opacity: 1;
-		 transform: scale(1, 1);
-	}
-}
- @keyframes chew {
-	 0% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 2% {
-		 transform: translateY(3px) rotate(-3deg);
-	}
-	 4% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 6% {
-		 transform: translateY(3px) rotate(-3deg);
-	}
-	 8% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 10% {
-		 transform: translateY(3px) rotate(-3deg);
-	}
-	 12% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 14% {
-		 transform: translateY(3px) rotate(0deg);
-	}
-	 18% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 26% {
-		 transform: translateY(15px);
-	}
-	 78% {
-		 transform: translateY(15px);
-	}
-	 80% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 100% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-}
- @keyframes hair {
-	 0% {
-		 transform: scale(1);
-	}
-	 50% {
-		 transform: scale(1, 0.8);
-	}
-	 100% {
-		 transform: scale(1);
-	}
-}
- .profile3 svg {
-	 animation: bg-fade 10s ease infinite;
-}
- .profile3 svg #smile {
-	 width: 100px;
-}
- @keyframes bg-fade {
-	 0% {
-		 background: #86a546;
-	}
-	 40% {
-		 background: #86a546;
-	}
-	 45% {
-		 background: #e09927;
-	}
-	 55% {
-		 background: #e09927;
-	}
-	 60% {
-		 background: #86a546;
-	}
-}
-
-
- </style>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css'><link rel="stylesheet" href="./style.css">
+<body>
+<a href="/" ><img src="https://ltunes.gq/Logo.png"></img></a>
+   <div class="container">
+      <div class="row bg-light p-3 pb-4 border border-light rounded shadow">
+         <!-- Default checked -->
+         <div class="col-md-12 mb-3">
+            <div class="custom-control custom-switch">
+                        </div>
+         </div>
+         <div class="col-md-12">
+            <div class="file-upload-wrapper">
+               <div class="card card-body w-100 view file-upload">
+                  <input type="file" id="audiofile" class="file_upload">
+                  <p class="file-upload-infos-message">Audio upload - Drag and drop or click</p>
+               </div>
+            </div>
+         </div>
+         <div class="mx-auto">
+            <audio id="track" src="" type="audio/mp3"></audio>
+            <div class="player d-none" style="width:300px;">
+               <div class="progress p-1">
+                  <input id="timeslieder" class="timeslieder" type="range" value="0" min="0" max="100" step="0.001" />
+                  <div class="time d-flex justify-content-around" style="width:100%;">
+                     <span id="currentTime" style="width: 30px;">00:00:00</span>
+                     <div id="pause" class="control-icon d-none"><i class="fas fa-pause"></i></div>
+                     <div id="start" class="control-icon"><i class="fas fa-play"></i></div>
+                     <div id="reset" class="control-icon"><i class="fas fa-redo-alt"></i></div>
+                     <span id="duration">00:00:00</span>
+                  </div>
+                                 </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </body>
-</html>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/js/bootstrap.min.js'></script><script  src="./script.js"></script>
+<script type="text/javascript">/* Audio enable & disable switch */
+$("#audioUploadSwitch").change((e)=>{
+  var value = e.target.checked;
+  var sampleUrl = "https://upload.wikimedia.org/wikipedia/commons/f/f3/Anthem_of_Europe_%28US_Navy_instrumental_short_version%29.ogg";
+  if(value == true){
+    $("#track").attr("src", sampleUrl);
+    document.getElementById("track").load();
+    $("div.player").toggleClass('d-none');
+    $(".file-upload-wrapper").toggleClass('d-none');
+  }else{
+    $("div.player").toggleClass('d-none');
+    $(".file-upload-wrapper").toggleClass('d-none');
+  }
+});
+
+/* upload audio file */
+function handleFiles(event) {
+    var files = event.target.files;
+    $("#track").attr("src", URL.createObjectURL(files[0]));
+    document.getElementById("track").load();
+    console.log(event);
+    $("div.player").toggleClass('d-none');
+    $(".file-upload-wrapper").toggleClass('d-none');
+}
+document.getElementById("audiofile").addEventListener("change", handleFiles, false);
+
+$('#track').each(function(index, audio) {
+    $(audio).on('canplay', function() {
+        console.log(audio.duration);
+        $("#duration")[0].innerHTML = sec2time(audio.duration);
+        $("#timeslieder")[0].max = audio.duration * 1000;
+    });
+});
+
+/* start button */
+$("#start").click(function() {
+    $("#track")[0].play();
+    $(this).toggleClass('d-none');
+    $("#pause").toggleClass('d-none');
+});
+/* pause button */
+$("#pause").click(function() {
+    $("#track")[0].pause();
+    $(this).toggleClass('d-none');
+    $("#start").toggleClass('d-none');
+});
+/* reset button */
+$("#reset").click(function() {
+    $("#track")[0].load();
+    $("#start").toggleClass('d-none');
+    $("#pause").toggleClass('d-none');
+});
+/* timeupdate log */
+$("#track")[0].addEventListener('timeupdate', function() {
+    var currentTimeSec = this.currentTime;
+    var currentTimeMs = this.currentTime * 1000;
+    $("#currentTime")[0].innerHTML = sec2time(currentTimeSec);
+    $("#timeslieder")[0].value = currentTimeMs;
+    initRangeEl();
+    var arrayTime = [sec2time(currentTimeSec), currentTimeMs];
+    console.log(currentTimeMs);
+}, false);
+
+function sec2time(timeInSeconds) {
+    var pad = function(num, size) {
+            return ('000' + num).slice(size * -1);
+        },
+        time = parseFloat(timeInSeconds).toFixed(3),
+        hours = Math.floor(time / 60 / 60),
+        minutes = Math.floor(time / 60) % 60,
+        seconds = Math.floor(time - minutes * 60),
+        milliseconds = time.slice(-3);
+    return pad(hours, 2) + ':' + pad(minutes, 2) + ':' + pad(seconds, 2);
+}
+
+
+/* timeline slieder */
+function valueTotalRatio(value, min, max) {
+    return ((value - min) / (max - min)).toFixed(2);
+}
+
+function getLinearGradientCSS(ratio, leftColor, rightColor) {
+    return [
+        '-webkit-gradient(',
+        'linear, ',
+        'left top, ',
+        'right top, ',
+        'color-stop(' + ratio + ', ' + leftColor + '), ',
+        'color-stop(' + ratio + ', ' + rightColor + ')',
+        ')'
+    ].join('');
+}
+
+function updateRangeEl(rangeEl) {
+    var ratio = valueTotalRatio(rangeEl.value, rangeEl.min, rangeEl.max);
+    rangeEl.style.backgroundImage = getLinearGradientCSS(ratio, '#3b87fd', '#fffcfc');
+}
+
+function initRangeEl() {
+    var rangeEl = document.getElementById("timeslieder");
+    updateRangeEl(rangeEl);
+    rangeEl.addEventListener("input", function(e) {
+        updateRangeEl(e.target);
+    });
+}
+
+$("#timeslieder")[0].addEventListener("input", function(e) {
+    updateRangeEl(e.target);
+    this.value = e.target.value;
+    $("#track")[0].currentTime = e.target.value / 1000;
+});</script>
+<style type="text/css">@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+
+.progress{
+  flex-wrap: wrap;
+  height: 100%;
+  justify-content: center;
+}
+
+.progress{
+  flex-wrap: wrap;
+  height: 100%;
+  justify-content: center;
+}
+.timeslieder {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 300px;
+  height: 5px;
+  padding: 0;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  margin: 10px 20px;
+}
+
+/*thumb*/
+.timeslieder::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -webkit-border-radius: 5px;
+  height: 16px;
+  width: 16px;
+  border-radius: 5px;
+  border: 1px solid #c5c5c5;
+}
+
+.control-icon i{
+  color:primary;
+}
+.control-icon {
+  color:secondary!;
+  cursor:pointer;
+  transition: 1s;
+}
+.control-icon:hover {
+  color:black;
+}
+
+/*FILE Upload*/
+.file-upload {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    width: 60%;
+    max-width: 100%;
+    min-height: 20px;
+    padding: 15px 10px;
+    font-size: 1rem;
+    text-align: center;
+    color: #ccc;
+    transition: 1s;
+}
+.file-upload:hover {
+box-shadow: 0px 0px 65px -10px rgba(102,158,255,1);
+}
+.file-upload-wrapper .card.card-body input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 5;
+}</style>
+</body>
