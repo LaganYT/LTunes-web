@@ -18,7 +18,6 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 </head>
-<div class="Logo" onclick="location.href = 'https://www.ltunes.gq/'" ;><img src="https://ltunes.gq/assets/Logo.png" width="50" height="50">LTunes</div>
 <iframe id="change" style="border:0px #ffffff none;" name="myiFrame" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" height="100%" width="100%" allowfullscreen></iframe>
     <script>
 var changez = document.getElementById("change")
@@ -27,8 +26,9 @@ setInterval(function(){
        var rand =  responses[Math.floor(Math.random() * responses.length)];
        changez.src=rand
 }, 300000);
+	    // , "/radio/"
     </script>
-//, "/radio/"<style>
+<style>
 	@font-face {
   font-family: LM;
   src: url(LemonMilk.ttf);
