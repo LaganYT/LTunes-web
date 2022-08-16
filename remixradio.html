@@ -26,6 +26,12 @@ setInterval(function(){
        changez.src=rand
 }, 300000);
 	    // , "/radio/"
+	    function start() {
+		           var responses = ["/radio/kfok",    "/radio/rr", "/radio/ltunes", "/radio/alt947", "/radio/v1011", "/radio/1079kiss", "/radio/937river", "/radio/cgr"]
+       var rand =  responses[Math.floor(Math.random() * responses.length)];
+       changez.src=rand
+	    }
+	    start()
     </script>
 <style>
 	@font-face {
