@@ -1,0 +1,10 @@
+<iframe id="change"></iframe>
+    <script>
+        var changez = document.getElementById("change")
+        (function loop() {
+            var responses = ["/radio/kfok",    "/radio/rr", "/radio/ltunes", "/radio/alt947", "/radio/v1011", "/radio/1079kiss", "/radio/937river"]
+            var rand =  responses[Math.floor(Math.random() * responses.length)];
+            changez.src = rand;
+            setTimeout(loop, 300000);
+        })();
+    </script>
