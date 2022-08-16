@@ -1,9 +1,9 @@
-<button onclick="switch()">switch</button>
-
-<script>
-  function switch() {
-   var responses = ["/radio/kfok",    "/radio/rr", "/radio/ltunes", "/radio/alt947", "/radio/v1011", "/radio/1079kiss", "/radio/937river"]
-   var rand =  responses[Math.floor(Math.random() * responses.length)];
-   window.location.replace(rand)
-  }
-</script>
+<iframe id="change"></iframe>
+    <script>
+var changez = document.getElementById("change")
+setInterval(function(){ 
+       var responses = ["/radio/kfok",    "/radio/rr", "/radio/ltunes", "/radio/alt947", "/radio/v1011", "/radio/1079kiss", "/radio/937river"]
+       var rand =  responses[Math.floor(Math.random() * responses.length)];
+       changez.src=rand
+}, 300000);
+    </script>
