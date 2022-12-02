@@ -1,308 +1,52 @@
-
+<html>
 <head>
-<title>LTunes</title>
-<link rel="shortcut icon" type="image/jpg" href="https://LTunes.gq/assets/Logo.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LTunes</title>
+<link rel="apple-touch-icon" sizes="180x180" href="https://ltunes.gq/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ltunes.gq/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ltunes.gq/favicon-16x16.png">
+<link rel="manifest" href="manifest.json" />
 <meta charset="utf-8">
-<script async src="https://arc.io/widget.min.js#eMnAzx6E"></script>
-<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=PT+Sans:700" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=PT+Sans:400" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+<link rel="stylesheet" href="index.css">
 </head>
-<div class="Logo" onclick="location.href = 'https://www.ltunes.gq/'" ;><img src="https://ltunes.gq/assets/Logo.png" width="50" height="50">LTunes</div>
-<center><div class="wrapper">
-<div class="profile-wrap">
-<div class="profile">
-<!--<div class="profile-icon" onclick="location.href = 'https://www.ltunes.gq/assets/LTunes.apk'" ;>
-<img width="100%" height="100%" src="/assets/android.png"></img>
-</div>
-<div class="profile-name">
-Android (Updated: 08/13/22)
-</div>
-	</div>
-	<div class="profile">
-<div class="profile-icon" onclick="location.href = 'https://drive.google.com/file/d/1RO5aKelNXAmDHzr2O2ocYktqpal8U6iB/view'" ;>
-<img width="100%" height="100%" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1VrQjcjYWwByAzn3tIuPRabbjBWHS4fe4eQ&usqp=CAU"></img>
-</div>
-<div class="profile-name">
-Windows
-</div>-->
+<div style="border-style: solid; border-color: #FFFBEB; font-size:10%;">
 <a href="https://www.amazon.com/dp/B0B5K9DTGV/ref=apps_sf_sta"><img width="108" height="30.3" src="data:image/png;base64,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"></img></a>
+	</div>
+	<br>
+	
+	<div style="border-style: solid; border-color: #bcbcbc; font-size:10%;">
 <a href="https://apps.samsung.com/appquery/appDetail.as?appId=com.LaganDevs.LTunes"><img width="108" height="30.3" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSco6lJIA3CAxRm-uDQDtJC_kUHQkrymEz5Xw&usqp=CAU"></img></a>
+
+	</div>
+	<div style="border-style: solid; border-color: #bcbcbc; font-size:10%;">
 <a href="https://drive.google.com/file/d/1RO5aKelNXAmDHzr2O2ocYktqpal8U6iB/view"><img width="108" height="30.3" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbiWxVhTrc48tw9mQXAqQaOW-29jd82vdWyw&usqp=CAU"></img></a>
+
+	</div>
+	<div style="border-style: solid; border-color: #bcbcbc; font-size:10%;">
 <a href="/assets/LTunes.apk"><img width="108" height="30.3" src="/assets/GOA.png"></img></a>
 
-</div>
-<a href="https://www.ltunes.gq/assets/record-20220725-153451.mp4">How to install app on android</a>
-	</center>
-<style>
-	@font-face {
-  font-family: LM;
-  src: url(LemonMilk.ttf);
+	</div>
+  <style>
+	img {
+  max-width: 100%;
+  height: auto;
 }
-	.Logo {
-	font-family: LM;
+	.bottom {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    margin: 0 0 0 0%;
+    background: #1e1e1e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;	
+    overflow: hidden;
 	}
-	body {
-	 background: #141414;
-	 font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-	 font-weight: 300;
-	 color: WHITE;
-	 opacity: 0;
-	 animation: fade-in 500ms ease 200ms 1 forwards;
-}
- body h1 {
-	 color: WHITE;
-	 font-size: 50px;
-}
- body a {
-	 padding: 5px 15px;
-	 color: #6d6d6d;
-	 font-size: 17px;
-	 text-decoration: none;
-	 text-transform: uppercase;
-	 border: 1px solid #6d6d6d;
-	 transition: all 300ms ease;
-}
- body a:hover {
-	 color: #ebecec;
-	 border: 1px solid #ebecec;
-}
- @keyframes fade-in {
-	 0% {
-		 opacity: 0;
-		 transform: scale(1.2);
+	html {
+	background: #1e1e1e;
+	color: #FFFFFF;
 	}
-	 100% {
-		 opacity: 1;
-		 transform: scale(1);
-	}
-}
- .wrapper {
-	 margin: 100px 0;
-	 text-align: center;
-}
- .profile {
-	 width: 150px;
-}
- .profile-wrap {
-	 display: flex;
-	 flex-wrap: wrap;
-	 justify-content: space-between;
-	 max-width: 800px;
-	 margin: 50px auto;
-}
- .profile-icon {
-	 width: 150px;
-	 height: 150px;
-	 border: 6px solid #1f1f1f;
-	 transition: all 300ms ease;
-}
- .profile-name {
-	 margin: 20px 0;
-	 line-height: 1.25em;
-	 transition: all 300ms ease;
-}
- .profile:hover .profile-icon {
-	 border: 6px solid #ebecec;
-}
- .profile:hover .profile-name {
-	 color: #ebecec;
-}
- .profile1 #left-brow {
-	 transform-origin: center 80%;
-	 animation: raise 10s ease-in-out infinite;
-}
- .profile1 #sunglasses {
-	 transform-origin: center 100%;
-	 animation: tilt 10s 250ms ease infinite;
-}
- .profile1 #mustache {
-	 transform-origin: center 90%;
-	 animation: mustache 10s 0ms ease infinite;
-}
- @keyframes raise {
-	 0% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 10% {
-		 transform: translateY(-10px) rotate(5deg);
-	}
-	 20% {
-		 transform: translateY(-10px) rotate(5deg);
-	}
-	 25% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 100% {
-		 transform: translateY(0px);
-	}
-}
- @keyframes tilt {
-	 0% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 10% {
-		 transform: translateY(-2px) rotate(5deg);
-	}
-	 20% {
-		 transform: translateY(-2px) rotate(5deg);
-	}
-	 25% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 100% {
-		 transform: translateY(0px);
-	}
-}
- @keyframes mustache {
-	 20% {
-		 transform: translateY(0px) scale(1);
-	}
-	 30% {
-		 transform: translateY(4px) rotate(-3deg) scale(1.03);
-	}
-	 40% {
-		 transform: translateY(0px) scale(1);
-	}
-}
- .profile2 #left-pupil, .profile2 #right-pupil {
-	 animation: side-to-side 10s ease-in-out infinite alternate;
-}
- .profile2 #left-eye-top, .profile2 #right-eye-top {
-	 transform-origin: center bottom;
-	 animation: wide-open 10s ease-in-out infinite alternate;
-}
- .profile2 #bottom-beak, .profile2 #gillard {
-	 transform-origin: center top;
-	 animation: chew 20s ease-in-out infinite;
-}
- .profile2 #hair {
-	 animation: hair 4s ease infinite alternate;
-}
- @keyframes side-to-side {
-	 0% {
-		 transform: translateX(0px);
-	}
-	 5% {
-		 transform: translateX(-5px);
-	}
-	 10% {
-		 transform: translateX(-5px);
-	}
-	 20% {
-		 transform: translateX(5px);
-	}
-	 25% {
-		 transform: translateX(5px);
-	}
-	 35% {
-		 transform: translateX(-5px);
-	}
-	 40% {
-		 transform: translateX(-5px);
-	}
-	 45% {
-		 transform: translateX(0px);
-	}
-}
- @keyframes wide-open {
-	 0% {
-		 opacity: 0;
-	}
-	 40% {
-		 opacity: 0;
-		 transform: scale(1, 0);
-	}
-	 42% {
-		 opacity: 1;
-		 transform: scale(1, 1);
-	}
-	 100% {
-		 opacity: 1;
-		 transform: scale(1, 1);
-	}
-}
- @keyframes chew {
-	 0% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 2% {
-		 transform: translateY(3px) rotate(-3deg);
-	}
-	 4% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 6% {
-		 transform: translateY(3px) rotate(-3deg);
-	}
-	 8% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 10% {
-		 transform: translateY(3px) rotate(-3deg);
-	}
-	 12% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 14% {
-		 transform: translateY(3px) rotate(0deg);
-	}
-	 18% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 26% {
-		 transform: translateY(15px);
-	}
-	 78% {
-		 transform: translateY(15px);
-	}
-	 80% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-	 100% {
-		 transform: translateY(0px) rotate(0deg);
-	}
-}
- @keyframes hair {
-	 0% {
-		 transform: scale(1);
-	}
-	 50% {
-		 transform: scale(1, 0.8);
-	}
-	 100% {
-		 transform: scale(1);
-	}
-}
- .profile3 svg {
-	 animation: bg-fade 10s ease infinite;
-}
- .profile3 svg #smile {
-	 width: 100px;
-}
- @keyframes bg-fade {
-	 0% {
-		 background: #86a546;
-	}
-	 40% {
-		 background: #86a546;
-	}
-	 45% {
-		 background: #e09927;
-	}
-	 55% {
-		 background: #e09927;
-	}
-	 60% {
-		 background: #86a546;
-	}
-}
-
-
- </style>
-</body>
+</style>
 </html>
