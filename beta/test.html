@@ -1,0 +1,889 @@
+
+
+<head>
+<title>LTunes</title>
+<link rel="shortcut icon" type="image/jpg" href="https://LTunes.gq/assets/Logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+      @media (max-width: 767px) {
+        .hidden-mobile {
+          display: none;
+        }
+      }
+    </style>
+	<meta charset="utf-8">
+<script async src="https://arc.io/widget.min.js#eMnAzx6E"></script>
+<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans:700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans:400" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+</head>
+<div class="Logo" onclick="location.href = 'https://www.ltunes.gq/'" ;><img src="https://ltunes.gq/assets/Logo.png" width="50" height="50">LTunes</div>
+<br>
+<center>
+	<img src="https://ltunes.gq/assets/ltr.png" width="50" height="50">
+	<h1>LTunes Radio</h1>
+	</h5>LTunes radio is the official radio station of LTunes. Run on a software developed by LTunes. LTunes radio consists of AJR, Em Beihold, Devrikat, and more!</h5>
+</center>
+<div class="bottom">
+<div class="player">
+	<span id="arm"></span>
+	<ul>
+		<li class="artwork">
+		</li>
+		<li class="info">
+			<h2 id="song">loading</h2>
+			<div class="button-items">
+				<audio id="music" preload="auto">
+				</audio>
+				<div id="slider">
+					<div id="elapsed"></div>
+					<div id="buffered"></div>
+				</div>
+				<p id="timer">0:00</p>
+				<div class="controls">
+					<span class="expend">
+					</span>
+					<svg id="play" viewBox="0 0 25 25" xml:space="preserve">
+						<defs>
+							<rect x="-49.5" y="-132.9" width="446.4" height="366.4"/>
+						</defs>
+						<g>
+							<circle fill="none" cx="12.5" cy="12.5" r="10.8"/>
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M8.7,6.9V18c0,0,0.2,1.4,1.8,0l8.1-4.8c0,0,1.2-1.1-1-2L9.8,6.5 C9.8,6.5,9.1,6,8.7,6.9z"/>
+						</g>
+					</svg>
+					<svg id="pause" viewBox="0 0 25 25" xml:space="preserve">
+						<g>
+							<rect x="6" y="4.6" width="3.8" height="15.7"/>
+							<rect x="14" y="4.6" width="3.9" height="15.7"/>
+						</g>
+					</svg>
+					<span class="expend">
+						<!--<svg id="next" class="step-foreward" viewBox="0 0 25 25" xml:space="preserve">
+							<g>
+								<polygon points="20.7,4.3 16.6,4.3 16.6,11.6 4.3,4.3 4.3,20.7 16.7,13.4 16.6,20.7 20.7,20.7"/>
+							</g>
+						</svg>-->
+					</span>
+					<div class="slider">
+						<div class="volume"></div>
+						<input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>
+</div>
+<script>
+	/* Music 
+======================================*/
+var playlist = [
+	{
+		"song"    : "LTunes Radio",
+		"artwork" : "https://ltunes.gq/assets/ltr.png",
+		"mp3"     : "https://ltr.ltunes.gq/stream"
+	}
+];
+
+/* General Load / Variables
+======================================*/
+var rot = 0;
+var duration;
+var playPercent;
+var rotate_timer;
+var armrot = -45;
+var bufferPercent;
+var currentSong = 0;
+var arm_rotate_timer;
+var arm = document.getElementById("arm");
+var next = document.getElementById("next");
+var song = document.getElementById("song");
+var timer = document.getElementById("timer");
+var music = document.getElementById("music");
+var album = document.getElementById("album");
+var artist = document.getElementById("artist");
+var volume = document.getElementById("volume");
+var playButton = document.getElementById("play");
+var timeline = document.getElementById("slider");
+var playhead = document.getElementById("elapsed");
+var previous = document.getElementById("previous");
+var pauseButton = document.getElementById("pause");
+var bufferhead = document.getElementById("buffered");
+var artwork = document.getElementsByClassName("artwork")[0];
+var timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
+var visablevolume = document.getElementsByClassName("volume")[0];
+
+music.addEventListener("ended", _next, false);
+music.addEventListener("timeupdate", timeUpdate, false);
+music.addEventListener("progress", 	bufferUpdate, false);
+load();
+
+/* Functions
+======================================*/
+function load(){
+	pauseButton.style.visibility = "hidden";
+	song.innerHTML = playlist[currentSong]['song'];
+	song.title = playlist[currentSong]['song'];
+	artwork.setAttribute("style", "background:url(https://i.imgur.com/3idGgyU.png), url('"+playlist[currentSong]['artwork']+"') center no-repeat;");
+	music.innerHTML = '<source src="'+playlist[currentSong]['mp3']+'" type="audio/mp3">';
+	music.load();
+}
+function reset(){ 
+	rotate_reset = setInterval(function(){ 
+		Rotate();
+		if(rot == 0){
+			clearTimeout(rotate_reset);
+		}
+	}, 1);
+	fireEvent(pauseButton, 'click');
+	armrot = -45;
+	playhead.style.width = "0px";
+	bufferhead.style.width = "0px";
+	timer.innerHTML = "0:00";
+	music.innerHTML = "";
+	currentSong = 0; // set to first song, to stay on last song: currentSong = playlist.length - 1;
+	song.innerHTML = playlist[currentSong]['song'];
+	song.title = playlist[currentSong]['song'];
+	album.innerHTML = playlist[currentSong]['album'];
+	album.title = playlist[currentSong]['album'];
+	artist.innerHTML = playlist[currentSong]['artist'];
+	artist.title = playlist[currentSong]['artist'];
+	artwork.setAttribute("style", "background:url(https://i.imgur.com/3idGgyU.png), url('"+playlist[currentSong]['artwork']+"') center no-repeat;");
+	music.innerHTML = '<source src="'+playlist[currentSong]['mp3']+'" type="audio/mp3">';
+	music.load();
+}
+function formatSecondsAsTime(secs, format) {
+  var hr  = Math.floor(secs / 3600);
+  var min = Math.floor((secs - (hr * 3600))/60);
+  var sec = Math.floor(secs - (hr * 3600) -  (min * 60));
+  if (sec < 10){ 
+    sec  = "0" + sec;
+  }
+  return min + ':' + sec;
+}
+function timeUpdate() {
+	bufferUpdate();
+	playPercent = timelineWidth * (music.currentTime / duration);
+	playhead.style.width = playPercent + "px";
+	timer.innerHTML = formatSecondsAsTime(music.currentTime.toString());
+}
+function bufferUpdate() {
+	bufferPercent = timelineWidth * (music.buffered.end(0) / duration);
+	bufferhead.style.width = bufferPercent + "px";
+}
+function Rotate(){
+	if(rot == 361){
+		artwork.style.transform = 'rotate(0deg)';
+		rot = 0;
+	} else {
+		artwork.style.transform = 'rotate('+rot+'deg)';
+		rot++;
+	}
+}
+function RotateArm(){
+	if(armrot > -12){
+		arm.style.transform = 'rotate(-38deg)';
+		armrot = -45;
+	} else {
+		arm.style.transform = 'rotate('+armrot+'deg)';
+		armrot = armrot + (26 / duration);
+	}
+}
+function fireEvent(el, etype){
+	if (el.fireEvent) {
+		el.fireEvent('on' + etype);
+	} else {
+		var evObj = document.createEvent('Events');
+		evObj.initEvent(etype, true, false);
+		el.dispatchEvent(evObj);
+	}
+}
+function _next(){
+	if(currentSong == playlist.length - 1){
+		reset();
+	} else {
+		fireEvent(next, 'click');
+	}
+}
+playButton.onclick = function() {
+	music.play();
+}
+pauseButton.onclick = function() {
+	music.pause();
+}
+music.addEventListener("play", function () {
+	playButton.style.visibility = "hidden";
+	pause.style.visibility = "visible";
+	rotate_timer = setInterval(function(){ 
+		if(!music.paused && !music.ended && 0 < music.currentTime){
+			Rotate();
+		}
+	}, 10);	
+	if(armrot != -45){
+		arm.setAttribute("style", "transition: transform 800ms;");
+		arm.style.transform = 'rotate('+armrot+'deg)';
+	}
+	arm_rotate_timer = setInterval(function(){ 
+		if(!music.paused && !music.ended && 0 < music.currentTime){
+			if(armrot == -45){
+				arm.setAttribute("style", "transition: transform 800ms;");
+				arm.style.transform = 'rotate(-38deg)';
+				armrot = -38;
+			}
+			if(arm.style.transition != ""){
+				setTimeout(function(){
+					arm.style.transition = "";
+				}, 1000);
+			}
+			RotateArm();
+		}
+	}, 1000);
+}, false);
+music.addEventListener("pause", function () {
+	arm.setAttribute("style", "transition: transform 800ms;");
+	arm.style.transform = 'rotate(-45deg)';
+	playButton.style.visibility = "visible";
+	pause.style.visibility = "hidden";
+	clearTimeout(rotate_timer);
+	clearTimeout(arm_rotate_timer);
+}, false);
+next.onclick = function(){
+	arm.setAttribute("style", "transition: transform 800ms;");
+	arm.style.transform = 'rotate(-45deg)';
+	clearTimeout(rotate_timer);
+	clearTimeout(arm_rotate_timer);
+	playhead.style.width = "0px";
+	bufferhead.style.width = "0px";
+	timer.innerHTML = "0:00";
+	music.innerHTML = "";
+	arm.style.transform = 'rotate(-45deg)';
+	armrot = -45;
+	if((currentSong + 1) == playlist.length){
+		currentSong = 0;
+		music.innerHTML = '<source src="'+playlist[currentSong]['mp3']+'" type="audio/mp3">';
+	} else {
+		currentSong++;
+		music.innerHTML = '<source src="'+playlist[currentSong]['mp3']+'" type="audio/mp3">';
+	}
+	song.innerHTML = playlist[currentSong]['song'];
+	song.title = playlist[currentSong]['song'];
+	album.innerHTML = playlist[currentSong]['album'];
+	album.title = playlist[currentSong]['album'];
+	artist.innerHTML = playlist[currentSong]['artist'];
+	artist.title = playlist[currentSong]['artist'];
+	artwork.setAttribute("style", "transform: rotate("+rot+"deg); background:url(https://i.imgur.com/3idGgyU.png), url('"+playlist[currentSong]['artwork']+"') center no-repeat;");
+	music.load();
+	duration = music.duration;
+	music.play();
+}
+previous.onclick = function(){
+	arm.setAttribute("style", "transition: transform 800ms;");
+	arm.style.transform = 'rotate(-45deg)';
+	clearTimeout(rotate_timer);
+	clearTimeout(arm_rotate_timer);
+	playhead.style.width = "0px";
+	bufferhead.style.width = "0px";
+	timer.innerHTML = "0:00";
+	music.innerHTML = "";
+	arm.style.transform = 'rotate(-45deg)';
+	armrot = -45;
+	if((currentSong - 1) == -1){
+		currentSong = playlist.length - 1;
+		music.innerHTML = '<source src="'+playlist[currentSong]['mp3']+'" type="audio/mp3">';
+	} else {
+		currentSong--;
+		music.innerHTML = '<source src="'+playlist[currentSong]['mp3']+'" type="audio/mp3">';
+	}
+	song.innerHTML = playlist[currentSong]['song'];
+	song.title = playlist[currentSong]['song'];
+	album.innerHTML = playlist[currentSong]['album'];
+	album.title = playlist[currentSong]['album'];
+	artist.innerHTML = playlist[currentSong]['artist'];
+	artist.title = playlist[currentSong]['artist'];
+	artwork.setAttribute("style", "transform: rotate("+rot+"deg); background:url(https://i.imgur.com/3idGgyU.png), url('"+playlist[currentSong]['artwork']+"') center no-repeat;");
+	music.load();
+	duration = music.duration;
+	music.play();
+}
+volume.oninput = function(){
+	music.volume = volume.value;
+	visablevolume.style.width = (80 - 11) * volume.value + "px";
+}
+music.addEventListener("canplay", function () {
+	duration = music.duration;
+}, false);</script>
+<style>@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+h1 {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13pt;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: rgb(255, 255, 255);
+	cursor: default;
+}
+h4 {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 8pt;
+	font-weight: 400;
+	cursor: default;
+}
+h2 {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13pt;
+	font-weight: 300;
+	color: rgb(255, 255, 255);
+	cursor: default;
+}
+.player {
+	height: 190px;
+	width: 430px;
+	background-color: rgb(30, 33, 37);
+	position: absolute;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	border-radius: 5px;
+	border-top-left-radius: 100px;
+	border-bottom-left-radius: 100px;
+}
+.player ul {
+	list-style: none;
+}
+.player ul li {
+	display: inline-block;
+}
+	.bottom {
+    position: fixed;
+    bottom: 0;
+    margin: 0 0 0 0%;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    text-align: center;		
+	}
+#arm{
+	width: 90px;
+	height: 90px;
+	position: absolute;
+	z-index: 1;
+	top: 15px;
+	left: 110px;
+	transform-origin: 77.5% 18.5%;
+	transform: rotate(-45deg);
+	background-image: url(https://i.imgur.com/Bzzqadh.png);
+	background-size: cover;
+}
+.artwork {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 190px;
+	width: 190px;
+	background: url(https://i.imgur.com/3idGgyU.png), url(https://i.imgur.com/Fu2Oezw.png) center no-repeat;
+	background-size: 190px, 75px !important;
+}
+.artwork img {
+  position: absolute;
+  height: 72px;
+  width: 72px;
+  border-radius: 50px;
+  top: 59px;
+  left: 59px;
+}
+.info h1 {
+	margin: 0 0 -10px;
+	margin-left: 180px;
+	width: 182px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.info h4 {
+	line-height: 20px;
+	color: rgb(99, 99, 103);
+	margin-left: 180px;
+	width: 182px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.info h2 {
+	margin-left: 180px;
+	width: 182px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.button-items {
+	margin-left: 180px;
+}
+#slider {
+	width: 182px;
+	height: 4px;
+	background: rgb(21, 21, 24);
+	border-radius: 2px;
+	overflow: hidden;
+}
+#slider #elapsed {
+	width: 0px;
+	height: 4px;
+	background: rgb(239, 109, 188);
+	border-radius: 2px;
+}
+#slider #buffered {
+	width: 0px;
+	height: 4px;
+	background: rgba(239, 109, 188, 0.3);
+	border-radius: 2px;
+	margin-top: -4px;
+}
+#timer {
+	color: rgb(99, 99, 103);
+	line-height: 0;
+	font-size: 9pt;
+	float: right;
+	font-family: Arial, Sans-Serif;
+}
+.controls {
+	margin-top: 25px;
+}
+.controls svg:nth-child(2) {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+#play {
+	padding: 0 3px;
+	width: 30px;
+	height: 30px;
+	x: 0px;
+	y: 0px;
+	enable-background: new 0 0 25 25;
+}
+#play g {
+	stroke: rgb(254, 254, 254);
+	stroke-width: 1;
+	stroke-miterlimit: 10;
+}
+#play g path {
+	fill: rgb(254, 254, 254);
+}
+
+#play:hover {
+	cursor: pointer;
+}
+#play:hover g {
+	stroke: rgb(239, 109, 188);
+	cursor: pointer;
+}
+#play:hover g path {
+	fill: rgb(239, 109, 188);
+	cursor: pointer;
+}
+.step-backward {
+	width: 18px;
+	height: 18px;
+	x: 0px;
+	y: 0px;
+	enable-background: new 0 0 25 25;
+	margin-bottom: 5px;
+}
+.step-backward g polygon, .step-foreward g polygon {
+	fill: rgb(254, 254, 254);
+}
+.step-foreward {
+	width: 18px;
+	height: 18px;
+	x: 0px;
+	y: 0px;
+	enable-background: new 0 0 25 25;
+	margin-bottom: 5px;
+}
+#pause {
+	x: 0px;
+	y: 0px;
+	enable-background: new 0 0 25 25;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	margin-left: -41px;
+	cursor: pointer;
+}
+#pause rect {
+	fill: rgb(255, 255, 255);
+}
+
+#pause:hover rect {
+	fill: rgb(239, 109, 188);
+}
+.expend {
+	padding: 0.5px;
+	cursor: pointer;
+}
+.expend svg:hover g polygon {
+	fill: rgb(239, 109, 188);
+	cursor: pointer;
+}
+.slider {
+	width: 80px;
+	position: absolute;
+	display: inline-block;
+	margin: 4px 0 0 10px;
+}
+.slider .volume{
+	width: 69px;
+	height: 4px;
+	background: rgba(239, 109, 188, 0.3);
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+	margin-top: 10px;
+	position: inherit;
+	pointer-events: none;
+}
+@-moz-document url-prefix() { //fix firefox being 1px off
+	.slider .volume{
+		margin-top: 11px;
+	}
+}
+input[type="range"] {
+	-webkit-appearance: none;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	width: 100%;
+	height: 4px;
+	margin: 0;
+	border: none;
+	border-radius: 14px;
+	padding: 0px 1px;
+	background: rgb(21, 21, 24);
+	outline: none;	
+}
+input[type="range"]::-moz-range-track {
+	border: inherit;
+	background: rgba(0, 0, 0, 0);
+}
+input[type="range"]::-ms-track {
+	border: inherit;
+	color: rgba(0, 0, 0, 0);
+}
+input[type="range"]::-ms-fill-lower, input[type="range"]::-ms-fill-upper {
+	background: rgba(0, 0, 0, 0);
+}
+input[type="range"]::-ms-tooltip {
+	display: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 12px;
+	height: 12px;
+	border: none;
+	border-radius: 6px;
+}
+input[type="range"]::-moz-range-thumb {
+	width: 12px;
+	height: 12px;
+	border: none;
+	border-radius: 6px;
+}
+input[type="range"]::-ms-thumb {
+	width: 12px;
+	height: 12px;
+	border-radius: 6px;
+	border: 0;
+	background-color: rgb(255, 255, 255);
+}
+input[type="range"]::-webkit-slider-thumb:hover, input[type="range"]::-webkit-slider-thumb:focus, input[type="range"]::-webkit-slider-thumb:active {
+	background-color: rgb(239, 109, 188);
+}
+input[type="range"]::-moz-range-thumb:hover, input[type="range"]::-moz-range-thumb:focus, input[type="range"]::-moz-range-thumb:active {
+	background-color: rgb(239, 109, 188);
+}
+input[type="range"]::-ms-thumb:hover, input[type="range"]::-ms-thumb:focus, input[type="range"]::-ms-thumb:active {
+	background-color: rgb(239, 109, 188);
+	}</style>	
+</div>
+<style>
+	@font-face {
+  font-family: LM;
+  src: url(LemonMilk.ttf);
+}
+	.Logo {
+	font-family: LM;
+	}
+	body {
+	 background: #141414;
+	 font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	 font-weight: 300;
+	 color: WHITE;
+	 opacity: 0;
+	 animation: fade-in 500ms ease 200ms 1 forwards;
+}
+ body h1 {
+	 color: WHITE;
+	 font-size: 50px;
+}
+ body a {
+	 padding: 5px 15px;
+	 color: #6d6d6d;
+	 font-size: 17px;
+	 text-decoration: none;
+	 text-transform: uppercase;
+	 border: 1px solid #6d6d6d;
+	 transition: all 300ms ease;
+}
+ body a:hover {
+	 color: #ebecec;
+	 border: 1px solid #ebecec;
+}
+ @keyframes fade-in {
+	 0% {
+		 opacity: 0;
+		 transform: scale(1.2);
+	}
+	 100% {
+		 opacity: 1;
+		 transform: scale(1);
+	}
+}
+ .wrapper {
+	 margin: 100px 0;
+	 text-align: center;
+}
+ .profile {
+	 width: 150px;
+}
+ .profile-wrap {
+	 display: flex;
+	 flex-wrap: wrap;
+	 justify-content: space-between;
+	 max-width: 800px;
+	 margin: 50px auto;
+}
+ .profile-icon {
+	 width: 150px;
+	 height: 150px;
+	 border: 6px solid #1f1f1f;
+	 transition: all 300ms ease;
+}
+ .profile-name {
+	 margin: 20px 0;
+	 line-height: 1.25em;
+	 transition: all 300ms ease;
+}
+ .profile:hover .profile-icon {
+	 border: 6px solid #ebecec;
+}
+ .profile:hover .profile-name {
+	 color: #ebecec;
+}
+ .profile1 #left-brow {
+	 transform-origin: center 80%;
+	 animation: raise 10s ease-in-out infinite;
+}
+ .profile1 #sunglasses {
+	 transform-origin: center 100%;
+	 animation: tilt 10s 250ms ease infinite;
+}
+ .profile1 #mustache {
+	 transform-origin: center 90%;
+	 animation: mustache 10s 0ms ease infinite;
+}
+ @keyframes raise {
+	 0% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 10% {
+		 transform: translateY(-10px) rotate(5deg);
+	}
+	 20% {
+		 transform: translateY(-10px) rotate(5deg);
+	}
+	 25% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 100% {
+		 transform: translateY(0px);
+	}
+}
+ @keyframes tilt {
+	 0% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 10% {
+		 transform: translateY(-2px) rotate(5deg);
+	}
+	 20% {
+		 transform: translateY(-2px) rotate(5deg);
+	}
+	 25% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 100% {
+		 transform: translateY(0px);
+	}
+}
+ @keyframes mustache {
+	 20% {
+		 transform: translateY(0px) scale(1);
+	}
+	 30% {
+		 transform: translateY(4px) rotate(-3deg) scale(1.03);
+	}
+	 40% {
+		 transform: translateY(0px) scale(1);
+	}
+}
+ .profile2 #left-pupil, .profile2 #right-pupil {
+	 animation: side-to-side 10s ease-in-out infinite alternate;
+}
+ .profile2 #left-eye-top, .profile2 #right-eye-top {
+	 transform-origin: center bottom;
+	 animation: wide-open 10s ease-in-out infinite alternate;
+}
+ .profile2 #bottom-beak, .profile2 #gillard {
+	 transform-origin: center top;
+	 animation: chew 20s ease-in-out infinite;
+}
+ .profile2 #hair {
+	 animation: hair 4s ease infinite alternate;
+}
+ @keyframes side-to-side {
+	 0% {
+		 transform: translateX(0px);
+	}
+	 5% {
+		 transform: translateX(-5px);
+	}
+	 10% {
+		 transform: translateX(-5px);
+	}
+	 20% {
+		 transform: translateX(5px);
+	}
+	 25% {
+		 transform: translateX(5px);
+	}
+	 35% {
+		 transform: translateX(-5px);
+	}
+	 40% {
+		 transform: translateX(-5px);
+	}
+	 45% {
+		 transform: translateX(0px);
+	}
+}
+ @keyframes wide-open {
+	 0% {
+		 opacity: 0;
+	}
+	 40% {
+		 opacity: 0;
+		 transform: scale(1, 0);
+	}
+	 42% {
+		 opacity: 1;
+		 transform: scale(1, 1);
+	}
+	 100% {
+		 opacity: 1;
+		 transform: scale(1, 1);
+	}
+}
+ @keyframes chew {
+	 0% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 2% {
+		 transform: translateY(3px) rotate(-3deg);
+	}
+	 4% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 6% {
+		 transform: translateY(3px) rotate(-3deg);
+	}
+	 8% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 10% {
+		 transform: translateY(3px) rotate(-3deg);
+	}
+	 12% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 14% {
+		 transform: translateY(3px) rotate(0deg);
+	}
+	 18% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 26% {
+		 transform: translateY(15px);
+	}
+	 78% {
+		 transform: translateY(15px);
+	}
+	 80% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+	 100% {
+		 transform: translateY(0px) rotate(0deg);
+	}
+}
+ @keyframes hair {
+	 0% {
+		 transform: scale(1);
+	}
+	 50% {
+		 transform: scale(1, 0.8);
+	}
+	 100% {
+		 transform: scale(1);
+	}
+}
+ .profile3 svg {
+	 animation: bg-fade 10s ease infinite;
+}
+ .profile3 svg #smile {
+	 width: 100px;
+}
+	.bottom {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    margin: 0 0 0 0%;
+    background: #1e1e1e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;	
+    overflow: hidden;
+	}
+ @keyframes bg-fade {
+	 0% {
+		 background: #86a546;
+	}
+	 40% {
+		 background: #86a546;
+	}
+	 45% {
+		 background: #e09927;
+	}
+	 55% {
+		 background: #e09927;
+	}
+	 60% {
+		 background: #86a546;
+	}
+}
+</style>
+</body></html>
