@@ -8,6 +8,7 @@
 <body>
   <h1>Audio Editor</h1>
   <div class="audio-player">
+	          <input type="file" id="input-audio" accept="audio/*">
     <audio id="audio-player" src="example-audio.mp3" controls></audio>
   </div>
   <div class="trimmer">
@@ -72,6 +73,27 @@ h1 {
 
 	</style>
   <script>
+	  const inputAudio = document.getElementById('input-audio');
+
+let audioCtx, audioSource, audioBuffer;
+
+inputAudio.addEventListener('change', function() {
+  const file = this.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    const audioData = e.target.result;
+
+    audioCtx = new AudioContext();
+    audioCtx.decodeAudioData(audioData, function(buffer) {
+      audioBuffer = buffer;
+      playButton.disabled = false;
+      trimButton.disabled = false;
+    });
+  }
+
+  reader.readAsArrayBuffer(file);
+});
 	const audioPlayer = document.getElementById('audio-player');
 const startTimeInput = document.getElementById('start-time');
 const endTimeInput = document.getElementById('end-time');
