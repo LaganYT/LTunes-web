@@ -1,140 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Audio Editor</title>
-    <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        font-family: sans-serif;
-        background-color: #f2f2f2;
-      }
-
-      h1 {
-        text-align: center;
-        margin: 1rem 0;
-      }
-
-      .audio-player {
-        max-width: 100%;
-        overflow: hidden;
-        margin-bottom: 1rem;
-      }
-
-      .trimmer {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 1rem;
-      }
-
-      .trimmer label {
-        margin-right: 1rem;
-      }
-
-      .trimmer input {
-        width: 4rem;
-      }
-
-      .download {
-        text-align: center;
-      }
-
-      .download a {
-        display: inline-block;
-        padding: 1rem;
-        background-color: #3498db;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 5px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Audio Editor</h1>
-    <div class="audio-player">
-      <input type="file" id="input-audio" accept="audio/*" />
-      <audio id="audio-player" controls></audio>
+<html>
+<head>
+  <title>Audio Editor</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    #audio-player {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    #audio-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    #audio-controls button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    #audio-controls input {
+      width: 50%;
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="audio-player">
+    <audio id="audio" controls>
+      <source src="audio.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div id="audio-controls">
+      <button id="play-btn">Play</button>
+      <button id="stop-btn">Stop</button>
+      <input type="range" id="audio-range" min="0" max="100" value="0" step="1">
+      <button id="download-btn">Download</button>
     </div>
-    <div class="trimmer">
-      <label for="start-time">Start Time:</label>
-      <input type="number" id="start-time" step="0.01" value="0" />
-      <label for="end-time">End Time:</label>
-      <input type="number" id="end-time" step="0.01" value="0" />
-      <button id="trim-btn">Trim</button>
-	    <div class="trimmer">
-    <label for="start-time">Start Time:</label>
-    <input type="number" id="start-time" step="0.01" value="0">
-    <label for="end-time">End Time:</label>
-    <input type="number" id="end-time" step="0.01" value="0">
-    <button id="trim-btn">Trim</button>
-    <button id="play-btn" disabled>Play</button>
   </div>
+  <script>
+    // Get audio element
+    const audio = document.getElementById('audio');
+    // Get audio range element
+    const audioRange = document.getElementById('audio-range');
+    // Get play button element
+    const playBtn = document.getElementById('play-btn');
+    // Get stop button element
+    const stopBtn = document.getElementById('stop-btn');
+    // Get download button element
+    const downloadBtn = document.getElementById('download-btn');
 
-    </div>
-    <div class="download">
-      <a href="#" id="download-link">Download Trimmed Audio</a>
-    </div>
-    <script>
-
-const inputAudio = document.getElementById('input-audio');
-const audioPlayer = document.getElementById('audio-player');
-const startTimeInput = document.getElementById('start-time');
-const endTimeInput = document.getElementById('end-time');
-const trimBtn = document.getElementById('trim-btn');
-const downloadLink = document.getElementById('download-link');
-let audioCtx, audioSource, audioBuffer, playButton = null;
-
-      inputAudio.addEventListener("change", function () {
-        const file = this.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          const audioData = e.target.result;
-
-          audioCtx = new AudioContext();
-          audioCtx.decodeAudioData(audioData, function (buffer) {
-            audioBuffer = buffer;
-            audioPlayer.src = URL.createObjectURL(new Blob([audioData]));
-            audioPlayer.load();
-            trimBtn.disabled = false;
-          });
-        };
-
-        reader.readAsArrayBuffer(file);
-      });
-
-      trimBtn.addEventListener("click", () => {
-        const startTime = parseFloat(startTimeInput.value);
-        const endTime = parseFloat(endTimeInput.value);
-
-        if (startTime >= endTime) {
-          alert("Start time must be less than end time.");
-          return;
-        }
-
-        const audioSource = audioCtx.createBufferSource();
-        const newDuration = endTime - startTime;
-     inputAudio.addEventListener('change', function() {
-  const file = this.files[0];
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
-    const audioData = e.target.result;
-
-    audioCtx = new AudioContext();
-    audioCtx.decodeAudioData(audioData, function(buffer) {
-      audioBuffer = buffer;
-      playButton = document.getElementById('play-btn');
-      trimButton.disabled = false;
+    // Play audio
+    playBtn.addEventListener('click', () => {
+      audio.play();
     });
-  }
 
-  reader.readAsArrayBuffer(file);
-});
-	  </script>
+    // Stop audio
+    stopBtn.addEventListener('click', () => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+
+    // Update audio range
+    audio.addEventListener('timeupdate', () => {
+      audioRange.value = audio.currentTime;
+    });
+
+    // Update audio time
+    audioRange.addEventListener('change', () => {
+      audio.currentTime = audioRange.value;
+    });
+
+    // Download audio
+    downloadBtn.addEventListener('click', () => {
+      const url = audio.src;
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'audio.mp3';
+      a.click();
+    });
+  </script>
+</body>
+</html>
