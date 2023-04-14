@@ -1,108 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audio Trimmer</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: auto;
-      padding: 10px;
-    }
-
-    input[type="range"] {
-      width: 100%;
-    }
-
-    .audio-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    button {
-      background-color: #4CAF50;
-      border: none;
-      color: white;
-      padding: 12px 24px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        input[type="file"] {
+            display: block;
+            margin-bottom: 1rem;
+        }
+        #audio {
+            width: 100%;
+        }
+        #controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-  <h1>Audio Trimmer</h1>
-  <input type="file" id="fileInput" accept="audio/*">
-  <p>Trim Start: <span id="trimStart">0</span>s</p>
-  <input type="range" id="trimStartRange" min="0" max="100" value="0">
-  <p>Trim End: <span id="trimEnd">0</span>s</p>
-  <input type="range" id="trimEndRange" min="0" max="100" value="100">
-  <div class="audio-controls">
-    <button id="playBtn">Play</button>
-    <button id="downloadBtn">Download Trimmed</button>
-  </div>
+    <input type="file" id="fileInput" accept="audio/*">
+    <audio id="audio" controls></audio>
+    <div id="controls">
+        <button id="trimStart">Trim Start</button>
+        <button id="trimEnd">Trim End</button>
+    </div>
+    <button id="download">Download Trimmed Audio</button>
 
-  <script>
-    const fileInput = document.getElementById('fileInput');
-    const trimStart = document.getElementById('trimStart');
-    const trimStartRange = document.getElementById('trimStartRange');
-    const trimEnd = document.getElementById('trimEnd');
-    const trimEndRange = document.getElementById('trimEndRange');
-    const playBtn = document.getElementById('playBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const audio = document.getElementById('audio');
+        const trimStartBtn = document.getElementById('trimStart');
+        const trimEndBtn = document.getElementById('trimEnd');
+        const downloadBtn = document.getElementById('download');
 
-    let audioBuffer;
-    let audioContext;
-    let source;
-    let startTime;
-    let endTime;
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const url = URL.createObjectURL(file);
+            audio.src = url;
+        });
 
-    fileInput.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (audioContext) {
-        audioContext.close();
-      }
-      audioContext = new AudioContext();
-      const arrayBuffer = await file.arrayBuffer();
-      audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-      trimEndRange.max = trimStartRange.max = Math.floor(audioBuffer.duration);
-      trimEnd.textContent = trimEndRange.value = trimEndRange.max;
-      startTime = 0;
-      endTime = audioBuffer.duration;
-    });
+        trimStartBtn.addEventListener('click', () => {
+            audio.currentTime = audio.currentTime + 5;
+        });
 
-    trimStartRange.addEventListener('input', (e) => {
-      startTime = Number(e.target.value);
-      trimStart.textContent = startTime;
-    });
+        trimEndBtn.addEventListener('click', () => {
+            audio.currentTime = audio.currentTime - 5;
+        });
 
-    trimEndRange.addEventListener('input', (e) => {
-      endTime = Number(e.target.value);
-      trimEnd.textContent = endTime;
-    });
-
-    playBtn.addEventListener('click', () => {
-      if (!audioBuffer) return;
-      if (source) {
-        source.stop();
-      }
-      source = audioContext.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(audioContext.destination);
-      source.start(0, startTime, endTime - startTime);
-    });
-
-    downloadBtn.addEventListener('click', () => {
-      // Download functionality not provided in this simple example
-      alert('Download functionality not provided in this simple example');
-    });
-  </script>
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.href = audio.src;
+            link.download = 'trimmed-audio.webm';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    </script>
 </body>
 </html>
