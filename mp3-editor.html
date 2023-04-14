@@ -1,127 +1,156 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Audio Editor</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
+      font-family: sans-serif;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
-      font-size: 16px;
-      background-color: #f0f0f0;
+      background-color: #F5F5F5;
     }
 
     header {
       background-color: #222;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
+      color: #fff;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
       position: fixed;
       top: 0;
-      left: 0;
-      right: 0;
+      width: 100%;
       z-index: 1;
     }
 
-    main {
-      margin-top: 80px;
+    h1 {
+      margin: 0;
+    }
+
+    #waveform-container {
+      margin-top: 50px;
+      position: relative;
+      width: 100%;
+      height: 150px;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
 
-    #file-input {
-      margin: 20px 0;
-    }
-
-    canvas {
-      border: 1px solid black;
-      width: 90%;
-      max-width: 500px;
-      height: 100px;
-      touch-action: none;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      background-color: #222;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button[disabled] {
-      opacity: 0.5;
-      cursor: default;
+    #waveform {
+      height: 100%;
+      width: 100%;
     }
 
     #selection {
-      margin-top: 20px;
-      text-align: center;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: 1px solid black;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      z-index: 2;
+    }
+
+    #play-button,
+    #pause-button,
+    #trim-button,
+    #download-button {
+      background-color: #222;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px;
+      padding: 10px;
+    }
+
+    #play-button:disabled,
+    #pause-button:disabled,
+    #trim-button:disabled,
+    #download-button.disabled {
+      opacity: 0.5;
     }
 
     #download-button {
-      margin-top: 20px;
       display: none;
     }
 
-    @media (max-width: 428px) {
-      header {
-        font-size: 20px;
+    #selection-label {
+      position: absolute;
+      top: -20px;
+      left: 10px;
+    }
+
+    @media screen and (max-width: 768px) {
+      #waveform-container {
+        height: 100px;
       }
-      canvas {
-        height: 60px;
-      }
-      button {
+
+      #play-button,
+      #pause-button,
+      #trim-button,
+      #download-button {
         font-size: 14px;
-        padding: 8px 16px;
+        margin: 5px;
+        padding: 8px;
       }
     }
   </style>
 </head>
+
 <body>
   <header>
-    Audio Editor
-  </header>
-  <main>
+    <h1>Audio Editor</h1>
     <input type="file" id="file-input">
-    <canvas id="waveform-canvas"></canvas>
+  </header>
+  <div id="waveform-container">
+    <canvas id="waveform"></canvas>
     <div id="selection"></div>
+    <div id="selection-label"></div>
+  </div>
+  <div style="display: flex; flex-direction: row; justify-content: center;">
     <button id="play-button" disabled>Play</button>
     <button id="pause-button" disabled>Pause</button>
     <button id="trim-button" disabled>Trim</button>
-    <a id="download-button" download></a>
-  </main>
+    <a id="download-button" href="#" download="trimmed-audio.wav" class="disabled">Download Trimmed Audio</a>
+  </div>
   <script>
-    let audioContext;
+    const audioContext = new AudioContext();
     let audioBuffer;
     let sourceNode;
-    let startTime;
-    let endTime;
+    let selection = {
+      start: 0,
+      end: 0
+    };
+    const fileInput = document.getElementById('file-input');
+    const waveformCanvas = document.getElementById('waveform');
+    const playButton = document.getElementById('play-button');
+    const pauseButton = document.getElementById('pause-button');
+    const trimButton = document.getElementById('trim-button');
+    const downloadButton = document.getElementById('download-button');
+    const selectionLabel = document.getElementById('selection-label');
+    const selectionDiv = document.getElementById('selection');
 
-    const waveformCanvas = document.querySelector('#waveform-canvas');
-    const playButton = document.querySelector('#play-button');
-    const pauseButton = document.querySelector('#pause-button');
-    const trimButton = document.querySelector('#trim-button');
-    const selectionDiv = document.querySelector('#selection');
-    const downloadButton = document.querySelector('#download-button');
-
-const drawWaveform = (audioBuffer, canvas) => {
+    const drawWaveform = (audioBuffer, canvas) => {
       const context = canvas.getContext('2d');
       const width = canvas.width;
       const height = canvas.height;
       const data = audioBuffer.getChannelData(0);
       const step = Math.ceil(data.length / width);
       const amp = height / 2;
-      context.clearRect(0, 0, width, height);
+      context.fillStyle = '#222';
+      context.fillRect(0, 0, width, height);
+      context.strokeStyle = '#fff';
       context.beginPath();
+      context.moveTo(0, amp);
       for (let i = 0; i < width; i++) {
         const min = 1.0;
         const max = -1.0;
@@ -134,208 +163,203 @@ const drawWaveform = (audioBuffer, canvas) => {
             max = datum;
           }
         }
-        context.strokeStyle = 'black';
-        context.moveTo(i, (1 + min) * amp);
+        context.lineTo(i, (1 + min) * amp);
         context.lineTo(i, (1 + max) * amp);
       }
+      context.lineTo(width, amp);
       context.stroke();
     };
 
-    const createAudioBuffer = (arrayBuffer) => {
-      audioContext = new AudioContext();
-      return audioContext.decodeAudioData(arrayBuffer);
-    };
-
-    const loadAudioFile = (file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        createAudioBuffer(event.target.result).then((buffer) => {
-          audioBuffer = buffer;
-          drawWaveform(audioBuffer, waveformCanvas);
-          playButton.disabled = false;
-          trimButton.disabled = false;
-        });
-      };
-      reader.readAsArrayBuffer(file);
+    const createSourceNode = (audioBuffer) => {
+      const source = audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      return source;
     };
 
     const play = () => {
-      if (!audioBuffer) {
-        return;
+      if (!sourceNode) {
+        sourceNode = createSourceNode(audioBuffer);
       }
-      if (sourceNode) {
-        sourceNode.stop();
-      }
-      sourceNode = audioContext.createBufferSource();
-      sourceNode.buffer = audioBuffer;
       sourceNode.connect(audioContext.destination);
-      sourceNode.start(0, startTime, endTime - startTime);
+      sourceNode.start(0, selection.start, selection.end - selection.start);
       playButton.disabled = true;
       pauseButton.disabled = false;
+      trimButton.disabled = true;
+      downloadButton.classList.add('disabled');
     };
 
     const pause = () => {
       if (sourceNode) {
         sourceNode.stop();
+        sourceNode.disconnect();
+        sourceNode = null;
       }
       playButton.disabled = false;
       pauseButton.disabled = true;
+      trimButton.disabled = false;
+      downloadButton.classList.remove('disabled');
     };
 
     const trim = () => {
-      if (!audioBuffer) {
-        return;
+      const newBuffer = audioContext.createBuffer(
+        audioBuffer.numberOfChannels,
+        selection.end - selection.start,
+        audioBuffer.sampleRate
+      );
+      for (let i = 0; i < audioBuffer.numberOfChannels; i++) {
+        const channelData = audioBuffer.getChannelData(i);
+        const newChannelData = newBuffer.getChannelData(i);
+        for (let j = selection.start; j < selection.end; j++) {
+          newChannelData[j - selection.start] = channelData[j];
+        }
       }
-      startTime = Math.round(selection.start / waveformCanvas.offsetWidth * audioBuffer.duration * 100) / 100;
-      endTime = Math.round(selection.end / waveformCanvas.offsetWidth * audioBuffer.duration * 100) / 100;
+      audioBuffer = newBuffer;
+      selection.start = 0;
+      selection.end = audioBuffer.duration;
+      drawWaveform(audioBuffer, waveformCanvas);
       pause();
-      selectionDiv.innerText = `Selected: ${startTime} - ${endTime}`;
-      downloadButton.href = URL.createObjectURL(new Blob([audioBuffer.getChannelData(0).subarray(startTime * audioBuffer.sampleRate, endTime * audioBuffer.sampleRate)]), {type: 'audio/wav'});
-      downloadButton.download = 'trimmed.wav';
-      downloadButton.style.display = 'block';
     };
 
-    waveformCanvas.addEventListener('mousedown', (event) => {
-      const rect = waveformCanvas.getBoundingClientRect();
-      const start = event.clientX - rect.left;
-      const end = start;
+    const updateSelection = (start, end) => {
       selection.start = start;
       selection.end = end;
-      selection.style.left = `${start}px`;
-      selection.style.width = `${end - start}px`;
-      trimButton.disabled = false;
-      waveformCanvas.addEventListener('mousemove', moveSelection);
+      const duration = selection.end - selection.start;
+      selectionLabel.textContent = `${duration.toFixed(2)} seconds selected`;
+      selectionDiv.style.left = `${(selection.start / audioBuffer.duration) * 100}%`;
+      selectionDiv.style.width = `${(duration / audioBuffer.duration) * 100}%`;
+      playButton.disabled = false;
+      pause
+    };
+
+    const download = () => {
+      const blob = new Blob([audioBuffer], { type: 'audio/wav' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'audio.wav';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    };
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const arrayBuffer = event.target.result;
+        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        drawWaveform(audioBuffer, waveformCanvas);
+        selection.start = 0;
+        selection.end = audioBuffer.duration;
+        updateSelection(selection.start, selection.end);
+        playButton.disabled = false;
+        pauseButton.disabled = true;
+        trimButton.disabled = false;
+        downloadButton.classList.remove('disabled');
+      };
+      reader.readAsArrayBuffer(file);
     });
 
-    const moveSelection = (event) => {
-      const rect = waveformCanvas.getBoundingClientRect();
-      const end = event.clientX - rect.left;
-      if (end < selection.start) {
-        selection.style.left = `${end}px`;
-        selection.style.width = `${selection.start - end}px`;
-      } else {
-        selection.style.width = `${end - selection.start}px`;
-}
-selection.end = end;
-};waveformCanvas.addEventListener('mouseup', () => {
-  waveformCanvas.removeEventListener('mousemove', moveSelection);
-});
+    playButton.addEventListener('click', play);
 
-fileInput.addEventListener('change', () => {
-  loadAudioFile(fileInput.files[0]);
-});
+    pauseButton.addEventListener('click', pause);
 
-playButton.addEventListener('click', () => {
-  play();
-});
+    trimButton.addEventListener('click', trim);
 
-pauseButton.addEventListener('click', () => {
-  pause();
-});
+    downloadButton.addEventListener('click', download);
 
-trimButton.addEventListener('click', () => {
-  trim();
-});
-
-downloadButton.addEventListener('click', () => {
-  downloadButton.style.display = 'none';
-}); 
-
-window.addEventListener('resize', () => {
-  drawWaveform(audioBuffer, waveformCanvas);
-  if (audioContext && sourceNode) {
-    sourceNode.stop();
-    playButton.disabled = false;
-    pauseButton.disabled = true;
-  }
-  trimButton.disabled = true;
-});
   </script>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+
+  header {
+    background-color: #222;
+    color: #fff;
+    padding: 20px;
+  }
+
+  h1 {
+    margin: 0;
+  }
+
+  #waveform {
+    width: 100%;
+    height: 100px;
+  }
+
+  #selection {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: ew-resize;
+    z-index: 1;
+  }
+
+  #selection-label {
+    margin-top: 10px;
+  }
+
+  button {
+    font-size: 16px;
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  #play-button {
+    background-color: #00c853;
+  }
+
+  #pause-button {
+    background-color: #d50000;
+    display: none;
+  }
+
+  #play-button:disabled {
+    background-color: #bdbdbd;
+    cursor: default;
+  }
+
+  #pause-button:disabled {
+    background-color: #bdbdbd;
+    cursor: default;
+  }
+
+  #trim-button {
+    background-color: #1565c0;
+  }
+
+  #trim-button:disabled {
+    background-color: #bdbdbd;
+    cursor: default;
+  }
+
+  #download-button {
+    background-color: #ff6f00;
+  }
+
+  #download-button.disabled {
+    background-color: #bdbdbd;
+    cursor: default;
+  }
+
+  @media (max-width: 600px) {
+    button {
+      font-size: 12px;
+      padding: 8px 16px;
     }
-    header {
-      background-color: #222;
-      color: #fff;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
-      position: fixed;
-      top: 0;
-      width: 100%;
-    }
-    h1 {
-      margin: 0;
-    }
-    #waveform-container {
-      margin-top: 50px;
-      position: relative;
-      width: 100%;
-      height: 150px;
-    }
-    #waveform {
-      height: 100%;
-      width: 100%;
-    }
-    #selection {
-      background-color: rgba(255, 255, 255, 0.5);
-      border: 1px solid black;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      z-index: 2;
-    }
-    #play-button,
-    #pause-button,
-    #trim-button,
-    #download-button {
-      background-color: #333;
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      margin: 10px;
-      padding: 10px;
-    }
-    #play-button:disabled,
-    #pause-button:disabled,
-    #trim-button:disabled {
-      opacity: 0.5;
-    }
-    #download-button {
-      display: none;
-    }
-    #selection-label {
-      position: absolute;
-      top: -20px;
-      left: 10px;
-    }
-    @media screen and (max-width: 500px) {
-      #waveform-container {
-        height: 100px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Audio Editor</h1>
-    <input type="file" id="file-input">
-  </header>
-  <div id="waveform-container">
-    <canvas id="waveform"></canvas>
-    <div id="selection"></div>
-    <div id="selection-label"></div>
-  </div>
-  <button id="play-button" disabled>Play</button>
-  <button id="pause-button" disabled>Pause</button>
-  <button id="trim-button" disabled>Trim</button>
-  <a id="download-button">Download Trimmed Audio</a>
-</body>
+  }
+
+</style>
+  </body>
 </html>
