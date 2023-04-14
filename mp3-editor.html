@@ -1,126 +1,162 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Audio Editor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div class="container">
-      <h1>Audio Editor</h1>
-      <div class="controls">
-        <input type="file" id="input-audio" accept="audio/*">
-        <button id="play-button">Play</button>
-        <button id="pause-button">Pause</button>
-        <button id="trim-button">Trim</button>
-        <a id="download-button" href="#" download>Download</a>
-      </div>
-      <audio id="audio-player"></audio>
-    </div>
-    <style>
-      .container {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
-}
-
-.controls {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-button {
-  margin: 0 10px;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-a {
-  margin: 0 10px;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #4CAF50;
-  color: #fff;
-  text-decoration: none;
-}
-
-a:hover {
-  background-color: #3e8e41;
-}
-    </style>
-    <script>
-    const audioPlayer = document.getElementById('audio-player');
-const playButton = document.getElementById('play-button');
-const pauseButton = document.getElementById('pause-button');
-const trimButton = document.getElementById('trim-button');
-const downloadButton = document.getElementById('download-button');
-const inputAudio = document.getElementById('input-audio');
-
-let audioCtx, audioSource, audioBuffer;
-
-inputAudio.addEventListener('change', function() {
-  const file = this.files[0];
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
-    const audioData = e.target.result;
-
-    audioCtx = new AudioContext();
-    audioCtx.decodeAudioData(audioData, function(buffer) {
-      audioBuffer = buffer;
-      playButton.disabled = false;
-      trimButton.disabled = false;
-    });
-  }
-
-  reader.readAsArrayBuffer(file);
-});
-
-playButton.addEventListener('click', function() {
-  audioSource = audioCtx.createBufferSource();
-  audioSource.buffer = audioBuffer;
-  audioSource.connect(audioCtx.destination);
-  audioSource.start(0);
-  playButton.disabled = true;
-  pauseButton.disabled = false;
-});
-
-pauseButton.addEventListener('click', function() {
-  audioSource.stop();
-  playButton.disabled = false;
-  pauseButton.disabled = true;
-});
-
-trimButton.addEventListener('click', function() {
-  const startTime = prompt("Enter start time (in seconds):");
-  const endTime = prompt("Enter end time (in seconds):");
-
-  const startSample = startTime * audioCtx.sampleRate;
-  const endSample = endTime * audioCtx.sampleRate;
-  const duration = endSample - startSample;
-  const trimmedBuffer = audioCtx.createBuffer(audioBuffer.numberOfChannels, duration, audioBuffer.sampleRate);
-  let channelData = [];
-for (let c = 0; c < audioBuffer.numberOfChannels; c++) {
-  channelData[c] = audioBuffer.getChannelData(c).slice(startSample, endSample);
-  trimmedBuffer.getChannelData(c).set(channelData[c]);
-}
-
-audioBuffer = trimmedBuffer;
-audioSource.buffer = audioBuffer;
-playButton.disabled = false;
-pauseButton.disabled = true;
-downloadButton.href = URL.createObjectURL(new Blob([audioData], {type: "audio/wav"}));
-downloadButton.download = "trimmed-audio.wav";
-downloadButton.style.display = "inline-block";
-});
-    </script>
-  </body>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Audio Editor</title>
+	<style>
+		body {
+			font-family: sans-serif;
+			background-color: #f5f5f5;
+		}
+		
+		.container {
+			max-width: 500px;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: #fff;
+			box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+		}
+		
+		h1 {
+			text-align: center;
+		}
+		
+		.audio-container {
+			display: flex;
+			align-items: center;
+			margin-bottom: 20px;
+		}
+		
+		.audio-container audio {
+			flex-grow: 1;
+		}
+		
+		.btn {
+			display: inline-block;
+			margin: 0 10px;
+			padding: 10px 20px;
+			background-color: #008CBA;
+			color: #fff;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+		
+		.btn:hover {
+			background-color: #00557F;
+		}
+		
+		.hidden {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Audio Editor</h1>
+		<div class="audio-container">
+			<audio id="audio"></audio>
+		</div>
+		<div class="btns-container">
+			<button class="btn" id="play-btn">Play</button>
+			<button class="btn" id="pause-btn">Pause</button>
+			<button class="btn" id="stop-btn">Stop</button>
+			<button class="btn" id="trim-btn">Trim</button>
+			<button class="btn hidden" id="download-btn">Download</button>
+		</div>
+	</div>
+	
+	<script>
+		window.addEventListener('DOMContentLoaded', () => {
+			const audio = document.getElementById('audio');
+			const playBtn = document.getElementById('play-btn');
+			const pauseBtn = document.getElementById('pause-btn');
+			const stopBtn = document.getElementById('stop-btn');
+			const trimBtn = document.getElementById('trim-btn');
+			const downloadBtn = document.getElementById('download-btn');
+			
+			// Load the audio file
+			audio.src = 'your-audio-file.mp3';
+			
+			// Play the audio
+			playBtn.addEventListener('click', () => {
+				audio.play();
+			});
+			
+			// Pause the audio
+			pauseBtn.addEventListener('click', () => {
+				audio.pause();
+			});
+			
+			// Stop the audio
+			stopBtn.addEventListener('click', () => {
+				audio.pause();
+				audio.currentTime = 0;
+			});
+			
+			// Trim the audio
+			trimBtn.addEventListener('click', () => {
+				const start = 5; // Start time in seconds
+				const end = 10; // End time in seconds
+				
+				// Create a new AudioContext
+				const audioContext = new AudioContext();
+				const source = audioContext.createBuffer
+// Get the audio buffer from the audio element
+				audioContext.decodeAudioData(
+					audio.captureStream().getAudioTracks()[0], 
+					(buffer) => {
+						// Calculate the start and end positions in samples
+						const startSample = start * buffer.sampleRate;
+						const endSample = end * buffer.sampleRate;
+						const newBufferLength = endSample - startSample;
+						
+						// Create a new audio buffer for the trimmed audio
+						const newBuffer = audioContext.createBuffer(
+							buffer.numberOfChannels,
+							newBufferLength,
+							buffer.sampleRate
+						);
+						
+						// Copy the audio data from the old buffer to the new buffer
+						for (let i = 0; i < buffer.numberOfChannels; i++) {
+							const channelData = buffer.getChannelData(i).subarray(startSample, endSample);
+							newBuffer.copyToChannel(channelData, i, 0);
+						}
+						
+						// Create a new audio source from the trimmed audio buffer
+						const newSource = audioContext.createBufferSource();
+						newSource.buffer = newBuffer;
+						newSource.connect(audioContext.destination);
+						newSource.start();
+						
+						// Hide the play, pause, and stop buttons
+						playBtn.classList.add('hidden');
+						pauseBtn.classList.add('hidden');
+						stopBtn.classList.add('hidden');
+						
+						// Show the download button
+						downloadBtn.classList.remove('hidden');
+						
+						// Create a Blob from the trimmed audio buffer
+						const blob = new Blob([newBuffer], {type: 'audio/mp3'});
+						const url = URL.createObjectURL(blob);
+						
+						// Set the download button href and download attribute
+						downloadBtn.href = url;
+						downloadBtn.download = 'trimmed-audio.mp3';
+					},
+					(err) => {
+						console.error(err);
+					}
+				);
+			});
+			
+			// Cleanup when the download button is clicked
+			downloadBtn.addEventListener('click', () => {
+				URL.revokeObjectURL(downloadBtn.href);
+			});
+		});
+	</script>
+</body>
 </html>
