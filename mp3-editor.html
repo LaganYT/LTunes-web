@@ -56,8 +56,10 @@
   <label for="audioFile">Select an audio file:</label>
   <input type="file" id="audioFile" accept="audio/*">
   <label for="trimStart">Trim Start:</label>
+  <input type="number" id="start-time" step="0.01" value="0" />
   <input type="range" id="trimStart" min="0" max="100" value="0">
   <label for="trimEnd">Trim End:</label>
+  <input type="number" id="end-time" step="0.01" value="0" />
   <input type="range" id="trimEnd" min="0" max="100" value="100">
   <button id="downloadBtn" disabled>Download Trimmed Audio</button>
 </div>
