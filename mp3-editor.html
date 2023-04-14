@@ -113,111 +113,111 @@
     const selectionDiv = document.querySelector('#selection');
     const downloadButton = document.querySelector('#download-button');
 
-    const drawWaveform = (audioBuffer, canvas) => {
-const context = canvas.getContext('2d');
-const width = canvas.width;
-const height = canvas.height;
-const data = audioBuffer.getChannelData(0);
-const step = Math.ceil(data.length / width);
-const amp = height / 2;
-context.clearRect(0, 0, width, height);
-context.beginPath();
-for (let i = 0; i < width; i++) {
-const min = 1.0;
-const max = -1.0;
-for (let j = 0; j < step; j++) {
-const datum = data[(i * step) + j];
-if (datum < min) {
-min = datum;
-}
-if (datum > max) {
-max = datum;
-}
-}
-context.strokeStyle = 'black';
-context.moveTo(i, (1 + min) * amp);
-context.lineTo(i, (1 + max) * amp);
-}
-context.stroke();
-};
+const drawWaveform = (audioBuffer, canvas) => {
+      const context = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const data = audioBuffer.getChannelData(0);
+      const step = Math.ceil(data.length / width);
+      const amp = height / 2;
+      context.clearRect(0, 0, width, height);
+      context.beginPath();
+      for (let i = 0; i < width; i++) {
+        const min = 1.0;
+        const max = -1.0;
+        for (let j = 0; j < step; j++) {
+          const datum = data[(i * step) + j];
+          if (datum < min) {
+            min = datum;
+          }
+          if (datum > max) {
+            max = datum;
+          }
+        }
+        context.strokeStyle = 'black';
+        context.moveTo(i, (1 + min) * amp);
+        context.lineTo(i, (1 + max) * amp);
+      }
+      context.stroke();
+    };
+
     const createAudioBuffer = (arrayBuffer) => {
-  audioContext = new AudioContext();
-  return audioContext.decodeAudioData(arrayBuffer);
-};
+      audioContext = new AudioContext();
+      return audioContext.decodeAudioData(arrayBuffer);
+    };
 
-const loadAudioFile = (file) => {
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    createAudioBuffer(event.target.result).then((buffer) => {
-      audioBuffer = buffer;
-      drawWaveform(audioBuffer, waveformCanvas);
+    const loadAudioFile = (file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        createAudioBuffer(event.target.result).then((buffer) => {
+          audioBuffer = buffer;
+          drawWaveform(audioBuffer, waveformCanvas);
+          playButton.disabled = false;
+          trimButton.disabled = false;
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    };
+
+    const play = () => {
+      if (!audioBuffer) {
+        return;
+      }
+      if (sourceNode) {
+        sourceNode.stop();
+      }
+      sourceNode = audioContext.createBufferSource();
+      sourceNode.buffer = audioBuffer;
+      sourceNode.connect(audioContext.destination);
+      sourceNode.start(0, startTime, endTime - startTime);
+      playButton.disabled = true;
+      pauseButton.disabled = false;
+    };
+
+    const pause = () => {
+      if (sourceNode) {
+        sourceNode.stop();
+      }
       playButton.disabled = false;
+      pauseButton.disabled = true;
+    };
+
+    const trim = () => {
+      if (!audioBuffer) {
+        return;
+      }
+      startTime = Math.round(selection.start / waveformCanvas.offsetWidth * audioBuffer.duration * 100) / 100;
+      endTime = Math.round(selection.end / waveformCanvas.offsetWidth * audioBuffer.duration * 100) / 100;
+      pause();
+      selectionDiv.innerText = `Selected: ${startTime} - ${endTime}`;
+      downloadButton.href = URL.createObjectURL(new Blob([audioBuffer.getChannelData(0).subarray(startTime * audioBuffer.sampleRate, endTime * audioBuffer.sampleRate)]), {type: 'audio/wav'});
+      downloadButton.download = 'trimmed.wav';
+      downloadButton.style.display = 'block';
+    };
+
+    waveformCanvas.addEventListener('mousedown', (event) => {
+      const rect = waveformCanvas.getBoundingClientRect();
+      const start = event.clientX - rect.left;
+      const end = start;
+      selection.start = start;
+      selection.end = end;
+      selection.style.left = `${start}px`;
+      selection.style.width = `${end - start}px`;
       trimButton.disabled = false;
+      waveformCanvas.addEventListener('mousemove', moveSelection);
     });
-  };
-  reader.readAsArrayBuffer(file);
-};
 
-const play = () => {
-  if (!audioBuffer) {
-    return;
-  }
-  if (sourceNode) {
-    sourceNode.stop();
-  }
-  sourceNode = audioContext.createBufferSource();
-  sourceNode.buffer = audioBuffer;
-  sourceNode.connect(audioContext.destination);
-  sourceNode.start(0, startTime, endTime - startTime);
-  playButton.disabled = true;
-  pauseButton.disabled = false;
-};
-
-const pause = () => {
-  if (sourceNode) {
-    sourceNode.stop();
-  }
-  playButton.disabled = false;
-  pauseButton.disabled = true;
-};
-
-const trim = () => {
-  if (!audioBuffer) {
-    return;
-  }
-  startTime = Math.round(selection.start / waveformCanvas.offsetWidth * audioBuffer.duration * 100) / 100;
-  endTime = Math.round(selection.end / waveformCanvas.offsetWidth * audioBuffer.duration * 100) / 100;
-  pause();
-  selectionDiv.innerText = `Selected: ${startTime} - ${endTime}`;
-  downloadButton.href = URL.createObjectURL(new Blob([audioBuffer.getChannelData(0).subarray(startTime * audioBuffer.sampleRate, endTime * audioBuffer.sampleRate)]), {type: 'audio/wav'});
-  downloadButton.download = 'trimmed.wav';
-  downloadButton.style.display = 'block';
-};
-
-waveformCanvas.addEventListener('mousedown', (event) => {
-  const rect = waveformCanvas.getBoundingClientRect();
-  const start = event.clientX - rect.left;
-  const end = start;
-  selection.start = start;
-  selection.end = end;
-  selection.style.left = `${start}px`;
-  selection.style.width = `${end - start}px`;
-  trimButton.disabled = false;
-  waveformCanvas.addEventListener('mousemove', moveSelection);
-});
-
-const moveSelection = (event) => {
-  const rect = waveformCanvas.getBoundingClientRect();
-  const end = event.clientX - rect.left;
-  if (end < selection.start) {
-    selection.style.left = `${end}px`;
-    selection.style.width = `${selection.start - end}px`;
-  } else {
-    selection.style.width = `${end - selection.start}px`;
+    const moveSelection = (event) => {
+      const rect = waveformCanvas.getBoundingClientRect();
+      const end = event.clientX - rect.left;
+      if (end < selection.start) {
+        selection.style.left = `${end}px`;
+        selection.style.width = `${selection.start - end}px`;
+      } else {
+        selection.style.width = `${end - selection.start}px`;
 }
 selection.end = end;
-};
-    waveformCanvas.addEventListener('mouseup', () => {
+};waveformCanvas.addEventListener('mouseup', () => {
   waveformCanvas.removeEventListener('mousemove', moveSelection);
 });
 
@@ -251,7 +251,7 @@ window.addEventListener('resize', () => {
   trimButton.disabled = true;
 });
   </script>
-   <style>
+  <style>
     body {
       font-family: sans-serif;
       margin: 0;
