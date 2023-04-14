@@ -1,83 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audio Editor</title>
-</head>
-<body>
-  <h1>Audio Editor</h1>
-  <div class="audio-player">
-	          <input type="file" id="input-audio" accept="audio/*">
-    <audio id="audio-player" src="example-audio.mp3" controls></audio>
-  </div>
-  <div class="trimmer">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Editor</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: sans-serif;
+        background-color: #f2f2f2;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 1rem 0;
+      }
+
+      .audio-player {
+        max-width: 100%;
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+
+      .trimmer {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .trimmer label {
+        margin-right: 1rem;
+      }
+
+      .trimmer input {
+        width: 4rem;
+      }
+
+      .download {
+        text-align: center;
+      }
+
+      .download a {
+        display: inline-block;
+        padding: 1rem;
+        background-color: #3498db;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Audio Editor</h1>
+    <div class="audio-player">
+      <input type="file" id="input-audio" accept="audio/*" />
+      <audio id="audio-player" controls></audio>
+    </div>
+    <div class="trimmer">
+      <label for="start-time">Start Time:</label>
+      <input type="number" id="start-time" step="0.01" value="0" />
+      <label for="end-time">End Time:</label>
+      <input type="number" id="end-time" step="0.01" value="0" />
+      <button id="trim-btn">Trim</button>
+	    <div class="trimmer">
     <label for="start-time">Start Time:</label>
     <input type="number" id="start-time" step="0.01" value="0">
     <label for="end-time">End Time:</label>
     <input type="number" id="end-time" step="0.01" value="0">
     <button id="trim-btn">Trim</button>
+    <button id="play-btn" disabled>Play</button>
   </div>
-  <div class="download">
-    <a href="#" id="download-link">Download Trimmed Audio</a>
-  </div>
-	<style>
-		* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
-body {
-  font-family: sans-serif;
-  background-color: #f2f2f2;
-}
+    </div>
+    <div class="download">
+      <a href="#" id="download-link">Download Trimmed Audio</a>
+    </div>
+    <script>
 
-h1 {
-  text-align: center;
-  margin: 1rem 0;
-}
+const inputAudio = document.getElementById('input-audio');
+const audioPlayer = document.getElementById('audio-player');
+const startTimeInput = document.getElementById('start-time');
+const endTimeInput = document.getElementById('end-time');
+const trimBtn = document.getElementById('trim-btn');
+const downloadLink = document.getElementById('download-link');
+let audioCtx, audioSource, audioBuffer, playButton = null;
 
-.audio-player {
-  max-width: 100%;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
+      inputAudio.addEventListener("change", function () {
+        const file = this.files[0];
+        const reader = new FileReader();
 
-.trimmer {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
+        reader.onload = function (e) {
+          const audioData = e.target.result;
 
-.trimmer label {
-  margin-right: 1rem;
-}
+          audioCtx = new AudioContext();
+          audioCtx.decodeAudioData(audioData, function (buffer) {
+            audioBuffer = buffer;
+            audioPlayer.src = URL.createObjectURL(new Blob([audioData]));
+            audioPlayer.load();
+            trimBtn.disabled = false;
+          });
+        };
 
-.trimmer input {
-  width: 4rem;
-}
+        reader.readAsArrayBuffer(file);
+      });
 
-.download {
-  text-align: center;
-}
+      trimBtn.addEventListener("click", () => {
+        const startTime = parseFloat(startTimeInput.value);
+        const endTime = parseFloat(endTimeInput.value);
 
-.download a {
-  display: inline-block;
-  padding: 1rem;
-  background-color: #3498db;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-}
+        if (startTime >= endTime) {
+          alert("Start time must be less than end time.");
+          return;
+        }
 
-	</style>
-  <script>
-	  const inputAudio = document.getElementById('input-audio');
-
-let audioCtx, audioSource, audioBuffer;
-
-inputAudio.addEventListener('change', function() {
+        const audioSource = audioCtx.createBufferSource();
+        const newDuration = endTime - startTime;
+     inputAudio.addEventListener('change', function() {
   const file = this.files[0];
   const reader = new FileReader();
 
@@ -87,40 +130,11 @@ inputAudio.addEventListener('change', function() {
     audioCtx = new AudioContext();
     audioCtx.decodeAudioData(audioData, function(buffer) {
       audioBuffer = buffer;
-      playButton.disabled = false;
+      playButton = document.getElementById('play-btn');
       trimButton.disabled = false;
     });
   }
 
   reader.readAsArrayBuffer(file);
 });
-	const audioPlayer = document.getElementById('audio-player');
-const startTimeInput = document.getElementById('start-time');
-const endTimeInput = document.getElementById('end-time');
-const trimBtn = document.getElementById('trim-btn');
-const downloadLink = document.getElementById('download-link');
-
-trimBtn.addEventListener('click', () => {
-  const startTime = parseFloat(startTimeInput.value);
-  const endTime = parseFloat(endTimeInput.value);
-  
-  if (startTime >= endTime) {
-    alert('Start time must be less than end time.');
-    return;
-  }
-  
-  const audioBlob = audioPlayer.captureStream().getAudioTracks()[0].stop();
-  const trimmedBlob = audioBlob.slice(startTime, endTime);
-  const trimmedUrl = URL.createObjectURL(trimmedBlob);
-  
-  downloadLink.href = trimmedUrl;
-  downloadLink.download = 'trimmed-audio.mp3';
-});
-
-audioPlayer.addEventListener('loadedmetadata', () => {
-  endTimeInput.value = audioPlayer.duration;
-});
-
-	</script>
-</body>
-</html>
+	  </script>
