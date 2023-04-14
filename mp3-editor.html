@@ -1,85 +1,142 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Audio Editor</title>
-  <style>
-    body {
-      font-family: sans-serif;
-    }
-    #audio-player {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    #audio-controls {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-    }
-    #audio-controls button {
-      padding: 10px;
-      font-size: 16px;
-    }
-    #audio-controls input {
-      width: 50%;
-      padding: 10px;
-      font-size: 16px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audio Editor</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 24px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  input[type="range"] {
+    width: 100%;
+  }
+
+  button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    background-color: #cccccc;
+  }
+</style>
 </head>
 <body>
-  <div id="audio-player">
-    <audio id="audio" controls>
-      <source src="audio.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
-    <div id="audio-controls">
-      <button id="play-btn">Play</button>
-      <button id="stop-btn">Stop</button>
-      <input type="range" id="audio-range" min="0" max="100" value="0" step="1">
-      <button id="download-btn">Download</button>
-    </div>
-  </div>
-  <script>
-    // Get audio element
-    const audio = document.getElementById('audio');
-    // Get audio range element
-    const audioRange = document.getElementById('audio-range');
-    // Get play button element
-    const playBtn = document.getElementById('play-btn');
-    // Get stop button element
-    const stopBtn = document.getElementById('stop-btn');
-    // Get download button element
-    const downloadBtn = document.getElementById('download-btn');
+<div class="container">
+  <h1>Audio Editor</h1>
+  <label for="audioFile">Select an audio file:</label>
+  <input type="file" id="audioFile" accept="audio/*">
+  <label for="trimStart">Trim Start:</label>
+  <input type="range" id="trimStart" min="0" max="100" value="0">
+  <label for="trimEnd">Trim End:</label>
+  <input type="range" id="trimEnd" min="0" max="100" value="100">
+  <button id="downloadBtn" disabled>Download Trimmed Audio</button>
+</div>
+<script>
+  const audioFileInput = document.getElementById('audioFile');
+  const trimStartInput = document.getElementById('trimStart');
+  const trimEndInput = document.getElementById('trimEnd');
+  const downloadBtn = document.getElementById('downloadBtn');
 
-    // Play audio
-    playBtn.addEventListener('click', () => {
-      audio.play();
-    });
+  let audioBuffer = null;
+  const audioContext = new AudioContext();
 
-    // Stop audio
-    stopBtn.addEventListener('click', () => {
-      audio.pause();
-      audio.currentTime = 0;
-    });
+  audioFileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    // Update audio range
-    audio.addEventListener('timeupdate', () => {
-      audioRange.value = audio.currentTime;
-    });
+    const arrayBuffer = await file.arrayBuffer();
+    audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
-    // Update audio time
-    audioRange.addEventListener('change', () => {
-      audio.currentTime = audioRange.value;
-    });
+    downloadBtn.disabled = false;
+  });
 
-    // Download audio
-    downloadBtn.addEventListener('click', () => {
-      const url = audio.src;
+  downloadBtn.addEventListener('click', () => {
+    if (!audioBuffer) return;
+
+    const startTime = audioBuffer.duration * (trimStartInput.value / 100);
+    const endTime = audioBuffer.duration * (trimEndInput.value / 100);
+    const duration = endTime - startTime;
+
+    const offlineContext = new OfflineAudioContext(audioBuffer.numberOfChannels, audioBuffer.sampleRate * duration, audioBuffer.sampleRate);
+    const source = offlineContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(offlineContext.destination);
+    source.start(0, startTime, duration);
+    offlineContext.startRendering().then(renderedBuffer => {
+      const audioBlob = bufferToWave(renderedBuffer, renderedBuffer.length);
+      const url = URL.createObjectURL(audioBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'audio.mp3';
+      a.download = 'trimmed_audio.wav';
       a.click();
     });
-  </script>
+  });
+
+  function bufferToWave(buffer, length) {
+    const wavBuffer = new ArrayBuffer(44 + length * 2);
+    const view = new DataView(wavBuffer);
+
+    function writeString(view, offset, str) {
+      for (let i = 0; i < str.length; i++) {
+        view.setUint8(offset + i, str.charCodeAt(i));
+      }
+    }
+
+    const numChannels = buffer.numberOfChannels;
+    const sampleRate = buffer.sampleRate;
+    const bytesPerSample = 2;
+
+    writeString(view, 0, 'RIFF');
+    view.setUint32(4, 36 + length * 2, true);
+    writeString(view, 8, 'WAVE');
+    writeString(view, 12, 'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * numChannels * bytesPerSample, true);
+    view.setUint16(32, numChannels * bytesPerSample, true);
+    view.setUint16(34, 16, true);
+    writeString(view, 36, 'data');
+    view.setUint32(40, length * 2, true);
+
+    const channelData = buffer.getChannelData(0);
+    for (let i = 0; i < length; i++) {
+      view.setInt16(44 + i * 2, channelData[i] * 0x7FFF, true);
+    }
+
+    return new Blob([view], { type: 'audio/wav' });
+  }
+</script>
 </body>
 </html>
