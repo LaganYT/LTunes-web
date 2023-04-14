@@ -1,367 +1,126 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8">
+    <title>Audio Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Audio Editor</h1>
+      <div class="controls">
+        <input type="file" id="input-audio" accept="audio/*">
+        <button id="play-button">Play</button>
+        <button id="pause-button">Pause</button>
+        <button id="trim-button">Trim</button>
+        <a id="download-button" href="#" download>Download</a>
+      </div>
+      <audio id="audio-player"></audio>
+    </div>
+    <style>
+      .container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
 
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Audio Editor</title>
-  <script src="https://unpkg.com/waveform-data/dist/waveform-data.min.js"></script>
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+button {
+  margin: 0 10px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
 
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #F5F5F5;
-    }
+a {
+  margin: 0 10px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: #fff;
+  text-decoration: none;
+}
 
-    header {
-      background-color: #222;
-      color: #fff;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1;
-    }
+a:hover {
+  background-color: #3e8e41;
+}
+    </style>
+    <script>
+    const audioPlayer = document.getElementById('audio-player');
+const playButton = document.getElementById('play-button');
+const pauseButton = document.getElementById('pause-button');
+const trimButton = document.getElementById('trim-button');
+const downloadButton = document.getElementById('download-button');
+const inputAudio = document.getElementById('input-audio');
 
-    h1 {
-      margin: 0;
-    }
+let audioCtx, audioSource, audioBuffer;
 
-    #waveform-container {
-      margin-top: 50px;
-      position: relative;
-      width: 100%;
-      height: 150px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+inputAudio.addEventListener('change', function() {
+  const file = this.files[0];
+  const reader = new FileReader();
 
-    #waveform {
-      height: 100%;
-      width: 100%;
-    }
+  reader.onload = function(e) {
+    const audioData = e.target.result;
 
-    #selection {
-      background-color: rgba(255, 255, 255, 0.5);
-      border: 1px solid black;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      z-index: 2;
-    }
-
-    #play-button,
-    #pause-button,
-    #trim-button,
-    #download-button {
-      background-color: #222;
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      margin: 10px;
-      padding: 10px;
-    }
-
-    #play-button:disabled,
-    #pause-button:disabled,
-    #trim-button:disabled,
-    #download-button.disabled {
-      opacity: 0.5;
-    }
-
-    #download-button {
-      display: none;
-    }
-
-    #selection-label {
-      position: absolute;
-      top: -20px;
-      left: 10px;
-    }
-
-    @media screen and (max-width: 768px) {
-      #waveform-container {
-        height: 100px;
-      }
-
-      #play-button,
-      #pause-button,
-      #trim-button,
-      #download-button {
-        font-size: 14px;
-        margin: 5px;
-        padding: 8px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <header>
-    <h1>Audio Editor</h1>
-    <input type="file" id="file-input">
-  </header>
-  <div id="waveform-container">
-    <canvas id="waveform"></canvas>
-    <div id="selection"></div>
-    <div id="selection-label"></div>
-  </div>
-  <div style="display: flex; flex-direction: row; justify-content: center;">
-    <button id="play-button" disabled>Play</button>
-    <button id="pause-button" disabled>Pause</button>
-    <button id="trim-button" disabled>Trim</button>
-    <a id="download-button" href="#" download="trimmed-audio.wav" class="disabled">Download Trimmed Audio</a>
-  </div>
-  <script>
-    const audioContext = new AudioContext();
-    let audioBuffer;
-    let sourceNode;
-    let selection = {
-      start: 0,
-      end: 0
-    };
-    const fileInput = document.getElementById('file-input');
-    const waveformCanvas = document.getElementById('waveform');
-    const playButton = document.getElementById('play-button');
-    const pauseButton = document.getElementById('pause-button');
-    const trimButton = document.getElementById('trim-button');
-    const downloadButton = document.getElementById('download-button');
-    const selectionLabel = document.getElementById('selection-label');
-    const selectionDiv = document.getElementById('selection');
-
-    const drawWaveform = (audioBuffer, canvas) => {
-      const context = canvas.getContext('2d');
-      const width = canvas.width;
-      const height = canvas.height;
-      const data = audioBuffer.getChannelData(0);
-      const step = Math.ceil(data.length / width);
-      const amp = height / 2;
-      context.fillStyle = '#222';
-      context.fillRect(0, 0, width, height);
-      context.strokeStyle = '#fff';
-      context.beginPath();
-      context.moveTo(0, amp);
-      for (let i = 0; i < width; i++) {
-        const min = 1.0;
-        const max = -1.0;
-        for (let j = 0; j < step; j++) {
-          const datum = data[(i * step) + j];
-          if (datum < min) {
-            min = datum;
-          }
-          if (datum > max) {
-            max = datum;
-          }
-        }
-        context.lineTo(i, (1 + min) * amp);
-        context.lineTo(i, (1 + max) * amp);
-      }
-      context.lineTo(width, amp);
-      context.stroke();
-    };
-
-    const createSourceNode = (audioBuffer) => {
-      const source = audioContext.createBufferSource();
-      source.buffer = audioBuffer;
-      return source;
-    };
-
-    const play = () => {
-      if (!sourceNode) {
-        sourceNode = createSourceNode(audioBuffer);
-      }
-      sourceNode.connect(audioContext.destination);
-      sourceNode.start(0, selection.start, selection.end - selection.start);
-      playButton.disabled = true;
-      pauseButton.disabled = false;
-      trimButton.disabled = true;
-      downloadButton.classList.add('disabled');
-    };
-
-    const pause = () => {
-      if (sourceNode) {
-        sourceNode.stop();
-        sourceNode.disconnect();
-        sourceNode = null;
-      }
+    audioCtx = new AudioContext();
+    audioCtx.decodeAudioData(audioData, function(buffer) {
+      audioBuffer = buffer;
       playButton.disabled = false;
-      pauseButton.disabled = true;
       trimButton.disabled = false;
-      downloadButton.classList.remove('disabled');
-    };
-
-    const trim = () => {
-      const newBuffer = audioContext.createBuffer(
-        audioBuffer.numberOfChannels,
-        selection.end - selection.start,
-        audioBuffer.sampleRate
-      );
-      for (let i = 0; i < audioBuffer.numberOfChannels; i++) {
-        const channelData = audioBuffer.getChannelData(i);
-        const newChannelData = newBuffer.getChannelData(i);
-        for (let j = selection.start; j < selection.end; j++) {
-          newChannelData[j - selection.start] = channelData[j];
-        }
-      }
-      audioBuffer = newBuffer;
-      selection.start = 0;
-      selection.end = audioBuffer.duration;
-      drawWaveform(audioBuffer, waveformCanvas);
-      pause();
-    };
-
-    const updateSelection = (start, end) => {
-      selection.start = start;
-      selection.end = end;
-      const duration = selection.end - selection.start;
-      selectionLabel.textContent = `${duration.toFixed(2)} seconds selected`;
-      selectionDiv.style.left = `${(selection.start / audioBuffer.duration) * 100}%`;
-      selectionDiv.style.width = `${(duration / audioBuffer.duration) * 100}%`;
-      playButton.disabled = false;
-      pause
-    };
-
-    const download = () => {
-      const blob = new Blob([audioBuffer], { type: 'audio/wav' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'audio.wav';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    };
-
-    fileInput.addEventListener('change', () => {
-      const file = fileInput.files[0];
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const arrayBuffer = event.target.result;
-        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        drawWaveform(audioBuffer, waveformCanvas);
-        selection.start = 0;
-        selection.end = audioBuffer.duration;
-        updateSelection(selection.start, selection.end);
-        playButton.disabled = false;
-        pauseButton.disabled = true;
-        trimButton.disabled = false;
-        downloadButton.classList.remove('disabled');
-      };
-      reader.readAsArrayBuffer(file);
     });
-
-    playButton.addEventListener('click', play);
-
-    pauseButton.addEventListener('click', pause);
-
-    trimButton.addEventListener('click', trim);
-
-    downloadButton.addEventListener('click', download);
-
-  </script>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
   }
 
-  header {
-    background-color: #222;
-    color: #fff;
-    padding: 20px;
-  }
+  reader.readAsArrayBuffer(file);
+});
 
-  h1 {
-    margin: 0;
-  }
+playButton.addEventListener('click', function() {
+  audioSource = audioCtx.createBufferSource();
+  audioSource.buffer = audioBuffer;
+  audioSource.connect(audioCtx.destination);
+  audioSource.start(0);
+  playButton.disabled = true;
+  pauseButton.disabled = false;
+});
 
-  #waveform {
-    width: 100%;
-    height: 100px;
-  }
+pauseButton.addEventListener('click', function() {
+  audioSource.stop();
+  playButton.disabled = false;
+  pauseButton.disabled = true;
+});
 
-  #selection {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.5);
-    cursor: ew-resize;
-    z-index: 1;
-  }
+trimButton.addEventListener('click', function() {
+  const startTime = prompt("Enter start time (in seconds):");
+  const endTime = prompt("Enter end time (in seconds):");
 
-  #selection-label {
-    margin-top: 10px;
-  }
+  const startSample = startTime * audioCtx.sampleRate;
+  const endSample = endTime * audioCtx.sampleRate;
+  const duration = endSample - startSample;
+  const trimmedBuffer = audioCtx.createBuffer(audioBuffer.numberOfChannels, duration, audioBuffer.sampleRate);
+  let channelData = [];
+for (let c = 0; c < audioBuffer.numberOfChannels; c++) {
+  channelData[c] = audioBuffer.getChannelData(c).slice(startSample, endSample);
+  trimmedBuffer.getChannelData(c).set(channelData[c]);
+}
 
-  button {
-    font-size: 16px;
-    margin: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #fff;
-  }
-
-  #play-button {
-    background-color: #00c853;
-  }
-
-  #pause-button {
-    background-color: #d50000;
-    display: none;
-  }
-
-  #play-button:disabled {
-    background-color: #bdbdbd;
-    cursor: default;
-  }
-
-  #pause-button:disabled {
-    background-color: #bdbdbd;
-    cursor: default;
-  }
-
-  #trim-button {
-    background-color: #1565c0;
-  }
-
-  #trim-button:disabled {
-    background-color: #bdbdbd;
-    cursor: default;
-  }
-
-  #download-button {
-    background-color: #ff6f00;
-  }
-
-  #download-button.disabled {
-    background-color: #bdbdbd;
-    cursor: default;
-  }
-
-  @media (max-width: 600px) {
-    button {
-      font-size: 12px;
-      padding: 8px 16px;
-    }
-  }
-
-</style>
+audioBuffer = trimmedBuffer;
+audioSource.buffer = audioBuffer;
+playButton.disabled = false;
+pauseButton.disabled = true;
+downloadButton.href = URL.createObjectURL(new Blob([audioData], {type: "audio/wav"}));
+downloadButton.download = "trimmed-audio.wav";
+downloadButton.style.display = "inline-block";
+});
+    </script>
   </body>
 </html>
