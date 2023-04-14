@@ -68,6 +68,8 @@
   const trimStartInput = document.getElementById('trimStart');
   const trimEndInput = document.getElementById('trimEnd');
   const downloadBtn = document.getElementById('downloadBtn');
+  const startTimeInput = document.getElementById('start-time');
+  const endTimeInput = document.getElementById('end-time');
 
   let audioBuffer = null;
   const audioContext = new AudioContext();
@@ -139,6 +141,22 @@
 
     return new Blob([view], { type: 'audio/wav' });
   }
+  
+  
+  // new
+  
+  startTimeInput.addEventListener('input', () => {
+    const startTime = parseFloat(startTimeInput.value);
+    const endTime = parseFloat(endTimeInput.value);
+
+    if (startTime < 0) {
+      startTimeInput.value = 0;
+    } else if (startTime >= endTime) {
+      startTimeInput.value = endTime - 0.01;
+    }
+
+    trimStartInput.value = (startTime / audioBuffer.duration) * 100;
+  });
 </script>
 </body>
 </html>
