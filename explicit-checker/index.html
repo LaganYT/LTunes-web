@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explicit Music Search</title>
+</head>
+<body>
+    <h1>Explicit Music Search</h1>
+    <label for="search">Search for a song:</label>
+    <input type="text" id="search" placeholder="Enter song name">
+    <button onclick="searchSong()">Search</button>
+    <div id="results"></div>
+
+    <!-- Add your Spotify API client ID and client secret here -->
+    <script>
+        const clientId = 'f640e1632f7c450cb666c3c72066d95b';
+        const clientSecret = 'a157155bbb204e88a7da4a7f03f05034';
+
+        function searchSong() {
+            const songName = document.getElementById('search').value;
+            const authUrl = 'https://accounts.spotify.com/api/token';
+            const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(songName)}&type=track`;
+
+            // Request access token from Spotify API using client ID and client secret
+            fetch(authUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret),
+                },
+                body: 'grant_type=client_credentials'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const accessToken = data.access_token;
+                fetchSearchResults(searchUrl, accessToken);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function fetchSearchResults(searchUrl, accessToken) {
+            // Fetch data from Spotify API using the access token
+            fetch(searchUrl, {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken,
+                }
+            })
+            .then(response => response.json())
+            .then(data => displayResults(data.tracks.items))
+            .catch(error => console.error('Error:', error));
+        }
+
+        function displayResults(tracks) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (tracks.length === 0) {
+                resultsDiv.innerHTML = 'No results found.';
+                return;
+            }
+
+            const list = document.createElement('ul');
+
+            tracks.forEach(track => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${track.name} - ${track.artists[0].name} (${track.explicit ? 'Explicit' : 'Not Explicit'})`;
+                list.appendChild(listItem);
+            });
+
+            resultsDiv.appendChild(list);
+        }
+    </script>
+</body>
+</html>
