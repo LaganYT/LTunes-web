@@ -162,7 +162,7 @@
 
             resultsDiv.appendChild(list);
         }
-                function showLoadingScreen() {
+                  function showLoadingScreen() {
             document.getElementById('loading-screen').style.display = 'flex';
         }
 
@@ -205,14 +205,33 @@
                 }
             })
             .then(response => response.json())
-            .then(data => {
-                hideLoadingScreen();
-                displayResults(data.tracks.items);
-            })
+            .then(data => displayResults(data.tracks.items))
             .catch(error => {
                 hideLoadingScreen();
                 console.error('Error:', error);
             });
+        }
+
+        function displayResults(tracks) {
+            hideLoadingScreen();
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            if (tracks.length === 0) {
+                resultsDiv.innerHTML = 'No results found.';
+                return;
+            }
+
+            const list = document.createElement('ul');
+
+            tracks.forEach(track => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${track.name} - ${track.artists[0].name} (${track.explicit ? 'Explicit' : 'Not Explicit'})`;
+                list.appendChild(listItem);
+            });
+
+            resultsDiv.appendChild(list);
         }
     </script>
 </body>
