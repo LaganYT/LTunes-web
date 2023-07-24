@@ -64,7 +64,35 @@
             border-radius: 4px;
             margin-right: 10px;
         }
+
+        /* Responsive design */
+        @media screen and (max-width: 600px) {
+            /* Adjust styles for small screens */
+            h1 {
+                font-size: 24px;
+            }
+
+            input[type="text"] {
+                width: 80%;
+                margin: 0 auto 10px;
+            }
+        }
     </style>
+</head>
+<body>
+    <h1>Explicit Music Search</h1>
+    <label for="search">Search for a song:</label>
+    <input type="text" id="search" placeholder="Enter song name">
+    <button onclick="searchSong()">Search</button>
+    <div id="results"></div>
+
+    <!-- Add your Spotify API client ID and client secret here -->
+    <script>
+        // The JavaScript code remains unchanged.
+    </script>
+</body>
+</html>
+
 </head>
 <body>
     <h1>Explicit Music Search</h1>
