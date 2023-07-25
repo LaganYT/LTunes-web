@@ -2,113 +2,16 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explicit Music Search</title>
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            margin: 5% 0 3%;
-            font-size: 36px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 3%;
-            font-size: 18px;
-        }
-
-        input[type="text"] {
-            width: 80%;
-            max-width: 300px;
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin: 0 auto 3%;
-        }
-
-        button {
-            padding: 8px 16px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: #ffffff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #results {
-            margin-top: 5%;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 3%;
-        }
-
-        .cover {
-            width: 40px;
-            height: 40px;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-
-        /* Responsive design */
-        @media screen and (max-width: 600px) {
-            /* Adjust styles for small screens */
-            h1 {
-                font-size: 28px;
-            }
-
-            label {
-                font-size: 16px;
-            }
-
-            input[type="text"] {
-                width: 90%;
-                font-size: 14px;
-            }
-
-            button {
-                font-size: 14px;
-            }
-
-            #results {
-                margin-top: 10%;
-            }
-
-            .cover {
-                width: 30px;
-                height: 30px;
-            }
-        }
-    </style>
+    <title>Explicit Music Checker</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-    <h1>Explicit Music Search</h1>
-    <label for="search">Search for a song:</label>
-    <input type="text" id="search" placeholder="Enter song name">
-    <button onclick="searchSong()">Search</button>
+    <h1>Explicit Music Checker</h1>
+    <div class="w3-display-topmiddle">
+    <input style="width:95%;" type="text" id="search" placeholder="Enter song name">
+    <button style="width:5%;" onclick="searchSong()">Search</button>
+    </div>
     <div id="results"></div>
-
-    <!-- Add your Spotify API client ID and client secret here -->
     <script>
         const clientId = 'f640e1632f7c450cb666c3c72066d95b';
         const clientSecret = 'a157155bbb204e88a7da4a7f03f05034';
