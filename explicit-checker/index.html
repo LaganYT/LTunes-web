@@ -4,13 +4,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explicit Music Checker</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <style>
+    <style>
         body {
             background-color: #121212;
             color: #FFFFFF;
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px; /* Adding padding to prevent elements from touching the sides */
         }
 
         h1 {
@@ -18,14 +18,12 @@
             margin-top: 20px;
         }
 
-        .w3-display-topmiddle {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            width: 90%;
-            max-width: 500px;
+        #search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 20px; /* Adding margin to create spacing at the bottom */
         }
 
         input[type="text"] {
@@ -33,9 +31,10 @@
             font-size: 16px;
             border: none;
             border-radius: 5px 0 0 5px;
-            width: 85%;
+            flex: 1;
             background-color: #2b2b2b;
             color: #FFFFFF;
+            margin-right: 10px; /* Adding margin between the input and button */
         }
 
         button {
@@ -43,7 +42,7 @@
             font-size: 16px;
             border: none;
             border-radius: 0 5px 5px 0;
-            width: 15%;
+            flex: 0.2;
             background-color: #2b2b2b;
             color: #FFFFFF;
             cursor: pointer;
@@ -85,10 +84,10 @@
 </head>
 <body>
     <h1>Explicit Music Checker</h1>
-    <center>
-    <input style="width:95%;" type="text" id="search" placeholder="Enter song name">
-    <button style="width:5%;" onclick="searchSong()">Search</button>
-    </center>
+    <div id="search-container">
+        <input style="width:85%;" type="text" id="search" placeholder="Enter song name">
+        <button style="width:5%;" onclick="searchSong()">Search</button>
+    </div>
     <div id="results"></div>
     <script>
         const clientId = 'f640e1632f7c450cb666c3c72066d95b';
