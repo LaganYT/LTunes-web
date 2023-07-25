@@ -4,6 +4,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explicit Music Checker</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style>
+        body {
+            background-color: #121212;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .w3-display-topmiddle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            width: 85%;
+            background-color: #2b2b2b;
+            color: #FFFFFF;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            width: 15%;
+            background-color: #2b2b2b;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+
+        #results {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+        }
+
+        .cover {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        div.track-details {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #FFFFFF;
+        }
+    </style>
 </head>
 <body>
     <h1>Explicit Music Checker</h1>
